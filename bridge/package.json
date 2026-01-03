@@ -1,0 +1,26 @@
+{
+  "name": "schroedinger-bridge",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "cd .. && tsx watch bridge/src/index.ts",
+    "start": "cd .. && tsx bridge/src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "@hono/node-ws": "^1.0.0",
+    "better-sqlite3": "^11.0.0",
+    "chokidar": "^4.0.0",
+    "glob": "^11.0.0",
+    "hono": "^4.6.0",
+    "onnxruntime-node": "^1.19.0",
+    "ulid": "^2.3.0",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

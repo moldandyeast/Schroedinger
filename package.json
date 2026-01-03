@@ -1,0 +1,23 @@
+{
+  "name": "schroedinger",
+  "version": "0.1.0",
+  "description": "A local-first knowledge instrument where thoughts exist in superposition",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "postinstall": "npm run setup",
+    "dev": "concurrently \"npm run dev:bridge\" \"npm run dev:lens\"",
+    "dev:bridge": "npm run --prefix bridge dev",
+    "dev:lens": "cd lens && npm run dev",
+    "start": "cd bridge && npm run start",
+    "install:all": "cd bridge && npm install && cd ../lens && npm install",
+    "clean": "rm -rf state/schroedinger.db",
+    "site:build": "cd site && npm run build",
+    "site:serve": "cd site && npm run serve"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
+

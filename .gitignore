@@ -1,0 +1,65 @@
+# ============================================
+# USER DATA - NEVER COMMIT
+# ============================================
+
+# Your personal knowledge (sacred)
+vault/*
+!vault/.gitkeep
+!vault/_examples/
+
+# Database cache (can be rebuilt from vault)
+state/
+
+# ============================================
+# LARGE BINARIES
+# ============================================
+
+# ONNX models (download separately)
+models/*.onnx
+models/*.bin
+
+# ============================================
+# DEPENDENCIES
+# ============================================
+
+node_modules/
+.bun/
+package-lock.json
+bun.lockb
+
+# ============================================
+# BUILD OUTPUTS
+# ============================================
+
+dist/
+build/
+.svelte-kit/
+site/public/
+
+# ============================================
+# ENVIRONMENT
+# ============================================
+
+.env
+.env.local
+.env.*.local
+
+# ============================================
+# IDE & OS
+# ============================================
+
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ============================================
+# LOGS & CACHE
+# ============================================
+
+*.log
+npm-debug.log*
+*.tsbuildinfo
+.cache/

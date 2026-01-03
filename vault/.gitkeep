@@ -1,0 +1,17 @@
+# This directory contains your personal knowledge objects.
+# Files here are NEVER committed to git.
+# 
+# To get started, create markdown files with YAML frontmatter:
+#
+# ---
+# id: 01ABC123...
+# title: My First Thought
+# created: 2026-01-03T00:00:00Z
+# type: fragment
+# tags: [example]
+# ---
+#
+# # My First Thought
+#
+# Your content here...
+
