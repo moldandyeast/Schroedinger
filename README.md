@@ -4,6 +4,8 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-moldandyeast%2FSchroedinger-181717?logo=github)](https://github.com/moldandyeast/Schroedinger)
 
+> ⚠️ **Early Build** — This is an active experiment. Core mechanics work, but many features are incomplete. Expect rough edges. See [WHITEPAPER.md](WHITEPAPER.md) for the v2.0 vision.
+
 ---
 
 ## The Idea
