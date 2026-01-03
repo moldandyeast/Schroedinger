@@ -360,7 +360,111 @@
   
   <main>
     <h1>Build Log</h1>
-<p>Coming soon.</p>
+<p><em>A journal of building Schroedinger.</em></p>
+<hr>
+<h2>The Beginning</h2>
+<p>Schroedinger started with a question: <em>What if knowledge tools embraced randomness instead of eliminating it?</em></p>
+<p>Every note app optimizes for retrieval—finding what you already know you want. But the most valuable insights come from accidents. From stumbling across something you forgot. From juxtapositions you didn&#39;t plan.</p>
+<p>The core thesis: <strong>Determinism is the enemy of discovery.</strong></p>
+<hr>
+<h2>Phase 1: The Bridge</h2>
+<p>Built the backend first. A Node.js server using Hono for HTTP, better-sqlite3 for persistence, and chokidar for file watching.</p>
+<p>The key insight: <strong>the database is a cache, not the source of truth.</strong> Your markdown files are sacred. The SQLite database can always be rebuilt from them. This means no lock-in. Delete the database, restart the server, everything regenerates.</p>
+<p>Added ONNX Runtime for local embeddings. The all-MiniLM-L6-v2 model gives us 384-dimensional vectors for semantic similarity. No cloud APIs. Everything runs on your machine.</p>
+<hr>
+<h2>Phase 2: The Canvas</h2>
+<p>Chose PixiJS for rendering. It handles thousands of sprites at 60fps. Matter.js for physics—a 2D engine that runs headless on the server and with visuals on the client.</p>
+<p>The sprites are simple: dark cards with titles. But they <em>move</em>. Entropy drives random drift. High entropy (new objects) means more movement. Low entropy (observed objects) means stability.</p>
+<p>Added spring animations for natural feel. When you drag an object, it follows your cursor with a slight lag. When you release, it settles with a bounce.</p>
+<hr>
+<h2>Phase 3: The Collision</h2>
+<p>This is the core mechanic. When two objects touch, the simulation pauses. A prompt appears: <em>What connects these?</em></p>
+<p>You can:</p>
+<ul>
+<li><strong>Snap</strong>: Name the connection, create a synthesis</li>
+<li><strong>Dismiss</strong>: Mark them as incompatible (creates rivalry)</li>
+<li><strong>Ignore</strong>: Let them pass</li>
+</ul>
+<p>Snapping creates a new markdown file—a &quot;bridge note&quot;—that links the two parents. The child starts with high entropy. It&#39;s unstable, energetic, seeking its own collisions.</p>
+<p>The collision prompt took many iterations. Too intrusive and it breaks flow. Too subtle and you miss it. The current version appears inline, right where the collision happened.</p>
+<hr>
+<h2>Phase 4: Memory &amp; Traits</h2>
+<p>Objects remember what happens to them:</p>
+<ul>
+<li>How often they&#39;ve been observed</li>
+<li>How long you spent with them</li>
+<li>Who they&#39;ve collided with</li>
+<li>What came of those collisions</li>
+</ul>
+<p>From memory, traits emerge:</p>
+<ul>
+<li><strong>Restless</strong>: Low observation, high drift → seeks collisions</li>
+<li><strong>Stable</strong>: High observation, many links → resists movement</li>
+<li><strong>Magnetic</strong>: Many affinities → attracts similar objects</li>
+<li><strong>Volatile</strong>: Many rivalries → sudden movements, chain reactions</li>
+<li><strong>Forgotten</strong>: No observation 30+ days → fades, drifts to edges</li>
+<li><strong>Ancient</strong>: 20+ observations, high mass → gravitational center</li>
+</ul>
+<p>Traits aren&#39;t assigned. They&#39;re computed from behavior. An object becomes Ancient by being observed over time. It becomes Forgotten by being ignored.</p>
+<hr>
+<h2>Phase 5: Semantic Gravity</h2>
+<p>Added attraction based on embedding similarity. Similar ideas drift toward each other. Dissimilar ideas ignore each other. Too-similar ideas (&gt;0.9 cosine similarity) actually repel—they&#39;re redundant, they need space.</p>
+<p>Combined with random drift, this creates emergent clustering. Related ideas form neighborhoods. Outliers float at the edges. The topology of your knowledge becomes visible.</p>
+<hr>
+<h2>Phase 6: The Launcher</h2>
+<p>Realized we needed multiple &quot;lenses&quot;—different ways to see the same data. The physics canvas is one lens. But you might also want:</p>
+<ul>
+<li>A passive observer mode</li>
+<li>A focused accelerator for intentional collisions</li>
+<li>A void map showing gaps in your knowledge</li>
+<li>A traditional archive view</li>
+</ul>
+<p>Built an app launcher. Each lens is a separate Svelte component with its own purpose. The launcher shows all available lenses, their status, and links to their documentation.</p>
+<p>Added dark/light theme. Theming uses CSS variables and <code>data-theme</code> attribute, synced via localStorage.</p>
+<hr>
+<h2>Phase 7: Documentation</h2>
+<p>Wrote extensive documentation:</p>
+<ul>
+<li>README.md: Quick start</li>
+<li>ABOUT.md: One-page summary</li>
+<li>ESSAY.md: The philosophy</li>
+<li>PLAY.md: Game design document</li>
+<li>ARCHITECTURE.md: Codebase guide</li>
+</ul>
+<p>Each lens also has its own doc explaining what it does, how to use it, and the design philosophy behind it.</p>
+<hr>
+<h2>Lessons Learned</h2>
+<ol>
+<li><p><strong>Start with the collision.</strong> The Cerny Method works. Build the core mechanic first, make it feel good, then expand.</p>
+</li>
+<li><p><strong>Files over apps.</strong> Plain markdown means no lock-in. You can read your notes in any text editor. They&#39;ll outlive any software.</p>
+</li>
+<li><p><strong>Randomness requires tuning.</strong> Too much drift feels chaotic. Too little feels static. The balance took many iterations.</p>
+</li>
+<li><p><strong>Traits create personality.</strong> When objects have memory and behavior, the system feels alive. This wasn&#39;t expected—it emerged from the design.</p>
+</li>
+<li><p><strong>Multiple lenses &gt; feature creep.</strong> Instead of cramming everything into one interface, separate lenses for separate purposes. Each can be simple.</p>
+</li>
+</ol>
+<hr>
+<h2>What&#39;s Next</h2>
+<p>The core loop works: Drift → Collide → Snap → Release → Evolve.</p>
+<p>Now we complete the remaining lenses:</p>
+<ul>
+<li>Observe: Watch without intervention</li>
+<li>Accelerator: Focused collision experiments</li>
+<li>Void: Map the embedding space</li>
+<li>Archive: Browse and search</li>
+</ul>
+<p>And deepen the agency system:</p>
+<ul>
+<li>Autonomous behaviors (magnetic seeking, volatile reactions)</li>
+<li>Evolution history visualization</li>
+<li>Emergent milestones</li>
+</ul>
+<p>The system runs. Time to make it sing.</p>
+<hr>
+<p><em>January 2026</em></p>
 
   </main>
   

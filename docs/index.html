@@ -360,457 +360,209 @@
   
   <main>
     <h1>SCHROEDINGER</h1>
-<p><strong>A Local-First Knowledge Instrument</strong></p>
-<p>Version: 0.1.0<br>Status: Working Prototype<br>License: MIT</p>
+<p><strong>A local-first knowledge instrument where thoughts exist in superposition until observed.</strong></p>
 <hr>
-<h2>What This Is</h2>
-<p>Schroedinger is a personal knowledge system where your thoughts exist as plain markdown files on your computer. No database lock-in. No cloud sync. No account. Just a folder of files that you can open with any text editor, today or fifty years from now.</p>
-<p>The software provides an interactive canvas where notes have physics, drift randomly over time, collide to form unexpected connections, and develop their own behaviors and memories.</p>
-<p><strong>The core thesis</strong>: determinism is the enemy of discovery.</p>
+<h2>The Idea</h2>
+<p>Your notes are plain markdown files. The software provides interactive <em>lenses</em>—different ways to see, explore, and play with your knowledge. Objects drift, collide, and form unexpected connections.</p>
+<p><strong>Core thesis</strong>: Determinism is the enemy of discovery.</p>
 <hr>
 <h2>Quick Start</h2>
-<pre><code class="language-bash"># Clone and install
-git clone &lt;repo&gt;
-cd schroedinger
-npm install
-cd bridge &amp;&amp; npm install
-cd ../lens &amp;&amp; npm install
-cd ..
+<pre><code class="language-bash"># Clone
+git clone https://github.com/moldandyeast/Schroedinger.git
+cd Schroedinger
 
-# Run both servers
-npm run dev
+# Install everything
+npm install
+cd bridge &amp;&amp; npm install &amp;&amp; cd ..
+cd lens &amp;&amp; npm install &amp;&amp; cd ..
+
+# Run (two terminals)
+cd bridge &amp;&amp; npm start      # Terminal 1: Backend on :3333
+cd lens &amp;&amp; npm run dev      # Terminal 2: Frontend on :5173
 
 # Open http://localhost:5173
 </code></pre>
 <hr>
+<h2>Philosophy</h2>
+<p><strong>File over app.</strong> Your markdown files are the truth. The database is a cache. The software is disposable. Your notes will outlive any tool.</p>
+<p><strong>Randomness as engine.</strong> Objects drift with entropy. Similar ideas attract via embeddings. Collisions force you to find connections you didn&#39;t plan.</p>
+<p><strong>Withered technology.</strong> Markdown, SQLite, local embeddings. Nothing fancy. Everything proven. Radically applied.</p>
+<p>Read the full philosophy in <a href="ESSAY.md">ESSAY.md</a>.</p>
+<hr>
+<h2>Lenses</h2>
+<p>Schroedinger provides multiple interfaces on top of your files:</p>
+<table>
+<thead>
+<tr>
+<th>Lens</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Drift</strong></td>
+<td>✅ Ready</td>
+<td>Physics canvas. Objects wander, collide, synthesize.</td>
+</tr>
+<tr>
+<td><strong>Observe</strong></td>
+<td>🔜 Soon</td>
+<td>Watch the system evolve without intervention.</td>
+</tr>
+<tr>
+<td><strong>Accelerator</strong></td>
+<td>🔜 Soon</td>
+<td>Focused collision experiments. Find connections.</td>
+</tr>
+<tr>
+<td><strong>Void</strong></td>
+<td>🔜 Soon</td>
+<td>Map the embedding space. See what&#39;s missing.</td>
+</tr>
+<tr>
+<td><strong>Archive</strong></td>
+<td>🔜 Soon</td>
+<td>Browse and search. The traditional view.</td>
+</tr>
+</tbody></table>
+<p>Launch any lens from the app launcher at <code>http://localhost:5173</code>.</p>
+<hr>
 <h2>Architecture</h2>
 <pre><code>┌─────────────────────────────────────────────────────────┐
-│                      THE LENS                           │
-│            (Svelte 5 + PixiJS 8 + matter.js)           │
-│                                                         │
-│    Canvas  ←→  Search  ←→  Edit Panel  ←→  Accelerator │
-│                                                         │
-│                   WebSocket + REST                      │
-└──────────────────────┬──────────────────────────────────┘
-                       │
-┌──────────────────────┴──────────────────────────────────┐
-│                 THE BRIDGE                              │
-│          (Node.js + Hono + SQLite + ONNX)              │
-│                                                         │
-│  • File watcher (chokidar)                              │
-│  • Vector embeddings (all-MiniLM-L6-v2)                 │
-│  • Physics simulation (matter.js)                       │
-│  • Object memory &amp; agency system                        │
-│  • localhost:3333                                       │
-└──────────────────────┬──────────────────────────────────┘
-                       │
-┌──────────────────────┴──────────────────────────────────┐
-│               THE SUBSTRATE                             │
-│               (Your Local Folder)                       │
-│                                                         │
-│  /vault/*.md           (Your thoughts - sacred)         │
-│  /state/schroedinger.db (Cache - can be rebuilt)        │
-│  /models/*.onnx        (Embedding model)                │
+│                      LENSES                              │
+│   Multiple interfaces on top of your data               │
+│   (Svelte + PixiJS + matter.js)                         │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      BRIDGE                              │
+│   Node.js backend: file watching, embeddings, API       │
+│   (Hono + SQLite + ONNX Runtime)                        │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      VAULT                               │
+│   Plain markdown files. The eternal format.             │
+│   Your data. Portable. Future-proof.                    │
 └─────────────────────────────────────────────────────────┘
 </code></pre>
+<p>See <a href="ARCHITECTURE.md">ARCHITECTURE.md</a> for the full codebase guide.</p>
 <hr>
 <h2>What&#39;s Implemented</h2>
-<h3>Bridge (Backend)</h3>
+<h3>Core System</h3>
+<ul>
+<li>✅ File watcher syncs <code>vault/*.md</code> to SQLite</li>
+<li>✅ ONNX embeddings (all-MiniLM-L6-v2, 384-dim)</li>
+<li>✅ Semantic similarity search</li>
+<li>✅ Physics simulation with drift</li>
+<li>✅ Object memory and behavioral traits</li>
+<li>✅ WebSocket real-time updates</li>
+</ul>
+<h3>Drift Lens</h3>
+<ul>
+<li>✅ PixiJS canvas with pan/zoom</li>
+<li>✅ KO sprites with physics</li>
+<li>✅ Collision detection and prompts</li>
+<li>✅ Synthesis creation (bridge notes)</li>
+<li>✅ Semantic gravity (similar ideas attract)</li>
+<li>✅ Affinity/rivalry system</li>
+<li>✅ Trait visualization (ancient, volatile, magnetic)</li>
+<li>✅ Particle Accelerator mode</li>
+<li>✅ Search, create, edit panels</li>
+</ul>
+<h3>App Shell</h3>
+<ul>
+<li>✅ Multi-lens launcher</li>
+<li>✅ Dark/light theme</li>
+<li>✅ Documentation integration</li>
+</ul>
+<hr>
+<h2>Controls (Drift Lens)</h2>
 <table>
 <thead>
 <tr>
-<th>Feature</th>
-<th>Status</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>File Watcher</td>
-<td>✅</td>
-<td>Syncs vault/*.md to SQLite via chokidar</td>
-</tr>
-<tr>
-<td>REST API</td>
-<td>✅</td>
-<td>Full CRUD for KOs, links, physics, memory</td>
-</tr>
-<tr>
-<td>WebSocket</td>
-<td>✅</td>
-<td>Real-time updates on file changes</td>
-</tr>
-<tr>
-<td>Embeddings</td>
-<td>✅</td>
-<td>ONNX Runtime + all-MiniLM-L6-v2 (384-dim)</td>
-</tr>
-<tr>
-<td>Similarity Search</td>
-<td>✅</td>
-<td>Cosine similarity in-memory</td>
-</tr>
-<tr>
-<td>Full-Text Search</td>
-<td>✅</td>
-<td>LIKE-based (FTS5 ready)</td>
-</tr>
-<tr>
-<td>Physics State</td>
-<td>✅</td>
-<td>Persisted positions/velocities</td>
-</tr>
-<tr>
-<td>Memory System</td>
-<td>✅</td>
-<td>Observations, collisions, affinities, rivalries</td>
-</tr>
-<tr>
-<td>Trait Computation</td>
-<td>✅</td>
-<td>Restless, stable, magnetic, volatile, forgotten, ancient</td>
-</tr>
-</tbody></table>
-<h3>Lens (Frontend)</h3>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Status</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Canvas</td>
-<td>✅</td>
-<td>PixiJS 8 with pan/zoom</td>
-</tr>
-<tr>
-<td>KO Sprites</td>
-<td>✅</td>
-<td>Cards with physics, spring animations</td>
-</tr>
-<tr>
-<td>Drag &amp; Drop</td>
-<td>✅</td>
-<td>Drag to move, positions saved</td>
-</tr>
-<tr>
-<td>Collision Detection</td>
-<td>✅</td>
-<td>matter.js collision events</td>
-</tr>
-<tr>
-<td>Collision Prompt</td>
-<td>✅</td>
-<td>Snap (synthesize) or Dismiss</td>
-</tr>
-<tr>
-<td>Search Panel</td>
-<td>✅</td>
-<td>Live search with debounce</td>
-</tr>
-<tr>
-<td>Create Panel</td>
-<td>✅</td>
-<td>New thought dialog (⌘N)</td>
-</tr>
-<tr>
-<td>Edit Panel</td>
-<td>✅</td>
-<td>Sidebar with content, memory, traits, physics</td>
-</tr>
-<tr>
-<td>Link Visualization</td>
-<td>✅</td>
-<td>Curved edges between connected KOs</td>
-</tr>
-<tr>
-<td>Semantic Gravity</td>
-<td>✅</td>
-<td>Attraction based on embedding similarity</td>
-</tr>
-<tr>
-<td>Similarity Lines</td>
-<td>✅</td>
-<td>Faint lines between similar (&gt;0.6) KOs</td>
-</tr>
-<tr>
-<td>Observation Glow</td>
-<td>✅</td>
-<td>Hover glow, records observation time</td>
-</tr>
-<tr>
-<td>Trait Visuals</td>
-<td>✅</td>
-<td>Shimmer, sparks, border colors</td>
-</tr>
-<tr>
-<td>Particle Accelerator</td>
-<td>✅</td>
-<td>Focus mode with relatives + strangers</td>
-</tr>
-<tr>
-<td>Autonomous Behaviors</td>
-<td>✅</td>
-<td>Magnetic seeks, volatile chain reactions</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>Technology Stack</h2>
-<h3>Bridge</h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Technology</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Runtime</td>
-<td>Node.js 22+ (tsx for dev)</td>
-</tr>
-<tr>
-<td>HTTP Server</td>
-<td>Hono</td>
-</tr>
-<tr>
-<td>Database</td>
-<td>SQLite (better-sqlite3)</td>
-</tr>
-<tr>
-<td>File Watcher</td>
-<td>chokidar</td>
-</tr>
-<tr>
-<td>Embeddings</td>
-<td>onnxruntime-node + all-MiniLM-L6-v2</td>
-</tr>
-<tr>
-<td>Physics</td>
-<td>matter.js (headless)</td>
-</tr>
-</tbody></table>
-<h3>Lens</h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Technology</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Framework</td>
-<td>Svelte 5</td>
-</tr>
-<tr>
-<td>Bundler</td>
-<td>Vite 5</td>
-</tr>
-<tr>
-<td>Rendering</td>
-<td>PixiJS 8</td>
-</tr>
-<tr>
-<td>Physics</td>
-<td>matter.js</td>
-</tr>
-<tr>
-<td>State</td>
-<td>Svelte stores</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>Folder Structure</h2>
-<pre><code>schroedinger/
-├── vault/                    # Your knowledge objects (SACRED)
-│   └── *.md                  
-├── state/
-│   └── schroedinger.db       # SQLite database (can be rebuilt)
-├── models/
-│   ├── all-MiniLM-L6-v2.onnx # Embedding model (86MB)
-│   └── tokenizer.json        # Tokenizer config
-├── bridge/
-│   ├── src/
-│   │   ├── index.ts          # Entry point, server setup
-│   │   ├── server.ts         # Hono routes
-│   │   ├── watcher.ts        # File system observer
-│   │   ├── db.ts             # SQLite operations + memory
-│   │   ├── embeddings.ts     # ONNX embedding pipeline
-│   │   ├── parser.ts         # Markdown + YAML frontmatter
-│   │   └── types.ts          # TypeScript types
-│   └── package.json
-├── lens/
-│   ├── src/
-│   │   ├── App.svelte        # Main application
-│   │   ├── main.ts           # Entry point
-│   │   └── lib/
-│   │       ├── Canvas.svelte       # PixiJS canvas + physics loop
-│   │       ├── KOSprite.ts         # Knowledge object visual
-│   │       ├── CollisionPrompt.svelte
-│   │       ├── SearchPanel.svelte
-│   │       ├── CreatePanel.svelte
-│   │       ├── EditPanel.svelte
-│   │       ├── Accelerator.svelte
-│   │       ├── api.ts              # API client
-│   │       ├── physics.ts          # matter.js wrapper
-│   │       ├── spring.ts           # Animation springs
-│   │       ├── stores.ts           # Svelte stores
-│   │       └── types.ts            # TypeScript types
-│   ├── package.json
-│   └── vite.config.ts
-├── docs/                     # Documentation site source
-├── package.json              # Root scripts
-├── README.md                 # This file
-├── PLAY.md                   # Game design document
-├── ESSAY.md                  # Philosophy
-└── ABOUT.md                  # Summary
-</code></pre>
-<hr>
-<h2>API Reference</h2>
-<h3>Knowledge Objects</h3>
-<pre><code>GET    /api/kos                    # List all KOs
-GET    /api/kos/:id                # Get KO with memory + physics
-POST   /api/kos                    # Create KO
-PUT    /api/kos/:id                # Update KO
-DELETE /api/kos/:id                # Delete KO
-</code></pre>
-<h3>Discovery</h3>
-<pre><code>GET    /api/search?q=term          # Full-text search
-GET    /api/similar/:id?n=5        # Semantic nearest neighbors
-GET    /api/similarities           # All pairwise similarities
-GET    /api/random?n=5             # Random KOs
-GET    /api/forgotten?days=30      # Unobserved KOs
-GET    /api/orphans                # KOs with no links
-GET    /api/accelerator/:id        # Anchor + relatives + strangers
-</code></pre>
-<h3>Relationships</h3>
-<pre><code>GET    /api/links                  # All links
-POST   /api/links                  # Create link
-DELETE /api/links/:source/:target  # Remove link
-</code></pre>
-<h3>Physics &amp; Memory</h3>
-<pre><code>GET    /api/physics                # All positions/velocities
-PUT    /api/physics/:id            # Update position
-PUT    /api/physics                # Batch update positions
-POST   /api/observe/:id            # Record observation
-POST   /api/collision              # Record collision outcome
-POST   /api/synthesis              # Create synthesis (bridge note)
-</code></pre>
-<h3>WebSocket</h3>
-<pre><code>WS     /ws
-  → connected
-  → file:created, file:changed, file:deleted
-  → ko:observed, ko:collided
-  → synthesis:created
-  → link:created, link:deleted
-</code></pre>
-<hr>
-<h2>Database Schema</h2>
-<pre><code class="language-sql">-- Core knowledge objects
-CREATE TABLE kos (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  content TEXT NOT NULL,
-  content_hash TEXT NOT NULL,
-  type TEXT DEFAULT &#39;fragment&#39;,
-  tags TEXT DEFAULT &#39;[]&#39;,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  file_path TEXT NOT NULL UNIQUE
-);
-
--- Explicit links between KOs
-CREATE TABLE links (
-  source_id TEXT NOT NULL,
-  target_id TEXT NOT NULL,
-  link_type TEXT DEFAULT &#39;explicit&#39;,
-  created_at TEXT NOT NULL,
-  PRIMARY KEY (source_id, target_id)
-);
-
--- Object memory and behavior
-CREATE TABLE ko_memory (
-  ko_id TEXT PRIMARY KEY,
-  observation_count INTEGER DEFAULT 0,
-  last_observed TEXT,
-  total_observation_time INTEGER DEFAULT 0,
-  collision_count INTEGER DEFAULT 0,
-  drift_distance REAL DEFAULT 0,
-  affinity_scores TEXT DEFAULT &#39;{}&#39;,
-  rivalry_scores TEXT DEFAULT &#39;{}&#39;,
-  behavioral_traits TEXT DEFAULT &#39;{}&#39;,
-  evolution_history TEXT DEFAULT &#39;[]&#39;
-);
-
--- Physics state
-CREATE TABLE ko_physics (
-  ko_id TEXT PRIMARY KEY,
-  position_x REAL DEFAULT 0,
-  position_y REAL DEFAULT 0,
-  velocity_x REAL DEFAULT 0,
-  velocity_y REAL DEFAULT 0,
-  mass REAL DEFAULT 1.0,
-  entropy REAL DEFAULT 1.0,
-  is_anchored INTEGER DEFAULT 0
-);
-</code></pre>
-<hr>
-<h2>Keyboard Shortcuts</h2>
-<table>
-<thead>
-<tr>
-<th>Key</th>
 <th>Action</th>
+<th>Control</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>⌘N</code> / <code>Ctrl+N</code></td>
-<td>Create new thought</td>
+<td>Pan canvas</td>
+<td>Drag empty space</td>
 </tr>
 <tr>
-<td><code>Escape</code></td>
-<td>Close panels, deselect</td>
+<td>Zoom</td>
+<td>Scroll wheel</td>
 </tr>
 <tr>
-<td>Scroll</td>
-<td>Zoom canvas</td>
+<td>Select object</td>
+<td>Click</td>
 </tr>
 <tr>
-<td>Drag canvas</td>
-<td>Pan view</td>
-</tr>
-<tr>
-<td>Drag KO</td>
 <td>Move object</td>
+<td>Drag</td>
+</tr>
+<tr>
+<td>Search</td>
+<td><code>⌘K</code></td>
+</tr>
+<tr>
+<td>Create new</td>
+<td><code>⌘N</code></td>
+</tr>
+<tr>
+<td>Back to launcher</td>
+<td><code>⌘⌫</code></td>
 </tr>
 </tbody></table>
+<h3>Collision Prompt</h3>
+<ul>
+<li><strong>Snap</strong> — Create a synthesis linking both objects</li>
+<li><strong>Dismiss</strong> — Create a rivalry (they&#39;ll avoid each other)</li>
+<li><strong>Ignore</strong> — No effect</li>
+</ul>
 <hr>
-<h2>How It Works</h2>
-<ol>
-<li><strong>Thoughts drift</strong> based on entropy (new = high entropy = more movement)</li>
-<li><strong>Similar thoughts attract</strong> via semantic gravity from embeddings</li>
-<li><strong>Collisions trigger prompts</strong> — snap to synthesize, dismiss to create rivalry</li>
-<li><strong>Objects remember</strong> — observations reduce entropy, collisions build relationships</li>
-<li><strong>Traits emerge</strong> — behaviors like &quot;restless&quot; or &quot;magnetic&quot; develop over time</li>
-<li><strong>Autonomous behaviors</strong> — magnetic objects seek affinities, volatile ones cause chain reactions</li>
-</ol>
+<h2>Documentation</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="ABOUT.md">ABOUT</a></td>
+<td>One-page summary</td>
+</tr>
+<tr>
+<td><a href="ESSAY.md">ESSAY</a></td>
+<td>The philosophy behind Schroedinger</td>
+</tr>
+<tr>
+<td><a href="PLAY.md">PLAY</a></td>
+<td>Game design document</td>
+</tr>
+<tr>
+<td><a href="ARCHITECTURE.md">ARCHITECTURE</a></td>
+<td>Codebase structure for developers</td>
+</tr>
+</tbody></table>
+<p>Each lens also has its own documentation accessible from the launcher.</p>
 <hr>
 <h2>Constraints</h2>
 <ul>
-<li><strong>No cloud sync</strong>: Use Syncthing or Dropbox on the folder if needed</li>
-<li><strong>No accounts</strong>: Single-user, local-first</li>
-<li><strong>No proprietary formats</strong>: Markdown + SQLite only</li>
-<li><strong>No external APIs</strong>: All AI runs locally via ONNX</li>
-<li><strong>No determinism</strong>: The system must surprise you</li>
+<li><strong>No cloud.</strong> Everything runs locally.</li>
+<li><strong>No accounts.</strong> Single-user, your machine.</li>
+<li><strong>No proprietary formats.</strong> Markdown + SQLite only.</li>
+<li><strong>No external APIs.</strong> Embeddings via local ONNX.</li>
+<li><strong>No determinism.</strong> The system must surprise you.</li>
 </ul>
 <hr>
-<h2>References</h2>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=Tk2TDPwV3Ho">Mark Cerny - Developing Your Game Idea</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Gunpei_Yokoi">Gunpei Yokoi - Lateral Thinking with Withered Technology</a></li>
-<li><a href="https://publicdelivery.org/fischli-weiss-how-to-work-better/">Fischli &amp; Weiss - How to Work Better</a></li>
-<li><a href="https://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems">Gödel&#39;s Incompleteness Theorems</a></li>
-</ul>
+<h2>License</h2>
+<p>MIT</p>
+<hr>
+<p><em>Determinism is the enemy of discovery.</em></p>
 
   </main>
   
