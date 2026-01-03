@@ -13,9 +13,10 @@
     hoveredKO,
     activeCollision,
     updatePhysicsState,
-  } from './stores';
-  import { updatePhysics as apiUpdatePhysics, recordObservation } from './api';
-  import type { KO, KOPhysics, Traits } from './types';
+    updatePhysics as apiUpdatePhysics, 
+    recordObservation,
+  } from '../../core';
+  import type { KO, KOPhysics, Traits } from '../../core';
 
   let container: HTMLDivElement;
   let app: Application;

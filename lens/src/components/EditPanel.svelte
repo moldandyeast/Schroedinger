@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { selectedKO, kos, memory, physics } from './stores';
-  import { recordObservation } from './api';
-  import type { KO, KOMemory, KOPhysics } from './types';
+  import { selectedKO, kos, memory, physics, recordObservation } from '../core';
   
   $: ko = $selectedKO ? $kos.get($selectedKO) : null;
   $: mem = $selectedKO ? $memory.get($selectedKO) : null;
@@ -9,15 +7,9 @@
   
   let observationStart: number | null = null;
   
-  // Track observation time
   $: if ($selectedKO) {
     observationStart = Date.now();
   } else if (observationStart && $selectedKO === null) {
-    // Record observation when deselecting
-    const duration = Date.now() - observationStart;
-    if (duration > 1000) { // Only record if viewed for > 1 second
-      // recordObservation would go here but we need the previous ID
-    }
     observationStart = null;
   }
   
@@ -96,7 +88,7 @@
           <p class="last-observed">Last observed: {formatDate(mem.last_observed)}</p>
         {/if}
         
-        {#if Object.keys(mem.behavioral_traits).some(k => mem.behavioral_traits[k])}
+        {#if Object.keys(mem.behavioral_traits).some(k => mem.behavioral_traits[k as keyof typeof mem.behavioral_traits])}
           <div class="traits">
             <h4>Traits</h4>
             <div class="trait-badges">
@@ -145,8 +137,8 @@
     right: 0;
     width: 360px;
     height: 100%;
-    background: rgba(20, 20, 20, 0.98);
-    border-left: 1px solid #333;
+    background: var(--bg-elevated, rgba(20, 20, 20, 0.98));
+    border-left: 1px solid var(--border, #333);
     padding: 20px;
     overflow-y: auto;
     z-index: 200;
@@ -154,14 +146,8 @@
   }
   
   @keyframes slideIn {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
   }
   
   header {
@@ -175,7 +161,7 @@
     font-family: 'Literata', Georgia, serif;
     font-size: 18px;
     font-weight: 500;
-    color: #fff;
+    color: var(--text-primary, #fff);
     margin: 0;
     flex: 1;
     line-height: 1.4;
@@ -184,16 +170,14 @@
   .close-btn {
     background: none;
     border: none;
-    color: #666;
+    color: var(--text-muted, #666);
     cursor: pointer;
     padding: 4px;
     margin-left: 12px;
     flex-shrink: 0;
   }
   
-  .close-btn:hover {
-    color: #fff;
-  }
+  .close-btn:hover { color: var(--text-primary, #fff); }
   
   .meta {
     display: flex;
@@ -205,7 +189,7 @@
   .type-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #44ff88;
+    color: var(--success, #44ff88);
     background: rgba(68, 255, 136, 0.15);
     padding: 3px 8px;
     border-radius: 4px;
@@ -214,15 +198,15 @@
   .tag {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #888;
-    background: #333;
+    color: var(--text-muted, #888);
+    background: var(--border, #333);
     padding: 3px 8px;
     border-radius: 4px;
   }
   
   .content {
-    background: #0a0a0a;
-    border: 1px solid #333;
+    background: var(--bg, #0a0a0a);
+    border: 1px solid var(--border, #333);
     border-radius: 8px;
     padding: 14px;
     max-height: 200px;
@@ -233,7 +217,7 @@
     font-family: 'Literata', Georgia, serif;
     font-size: 13px;
     line-height: 1.6;
-    color: #ccc;
+    color: var(--text-secondary, #ccc);
     white-space: pre-wrap;
     word-wrap: break-word;
     margin: 0;
@@ -241,19 +225,17 @@
   
   .divider {
     height: 1px;
-    background: #333;
+    background: var(--border, #333);
     margin: 20px 0;
   }
   
-  section {
-    margin-bottom: 20px;
-  }
+  section { margin-bottom: 20px; }
   
   h3 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 500;
-    color: #666;
+    color: var(--text-muted, #666);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin: 0 0 12px 0;
@@ -262,7 +244,7 @@
   h4 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #555;
+    color: var(--text-faint, #555);
     margin: 12px 0 8px 0;
   }
   
@@ -273,7 +255,7 @@
   }
   
   .stat {
-    background: #1a1a1a;
+    background: var(--bg-elevated, #1a1a1a);
     border-radius: 6px;
     padding: 10px;
     text-align: center;
@@ -283,27 +265,23 @@
     display: block;
     font-family: 'JetBrains Mono', monospace;
     font-size: 20px;
-    color: #fff;
+    color: var(--text-primary, #fff);
   }
   
   .stat-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #666;
+    color: var(--text-muted, #666);
   }
   
   .last-observed {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #666;
+    color: var(--text-muted, #666);
     margin-top: 12px;
   }
   
-  .trait-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
+  .trait-badges { display: flex; flex-wrap: wrap; gap: 6px; }
   
   .trait-badge {
     font-family: 'JetBrains Mono', monospace;
@@ -331,14 +309,14 @@
   .physics-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #666;
+    color: var(--text-muted, #666);
     width: 60px;
   }
   
   .physics-bar {
     flex: 1;
     height: 6px;
-    background: #222;
+    background: var(--border-subtle, #222);
     border-radius: 3px;
     overflow: hidden;
   }
@@ -357,7 +335,7 @@
   .physics-value {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #888;
+    color: var(--text-muted, #888);
     width: 40px;
     text-align: right;
   }
@@ -365,21 +343,21 @@
   footer {
     margin-top: 20px;
     padding-top: 16px;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--border, #333);
   }
   
   .file-path {
     display: block;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #555;
+    color: var(--text-faint, #555);
     margin-bottom: 4px;
   }
   
   .date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #444;
+    color: var(--text-ghost, #444);
   }
 </style>
 

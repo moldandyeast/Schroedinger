@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — Schroedinger</title>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('schroedinger-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Literata:opsz,ital,wght@7..72,0,400;7..72,0,500;7..72,0,600;7..72,1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-elevated: #141414;
+      --fg: #e0e0e0;
+      --fg-secondary: #ccc;
+      --fg-muted: #888;
+      --fg-faint: #555;
+      --fg-ghost: #333;
+      --accent: #c9a227;
+      --accent-hover: #ddb832;
+      --border: #252525;
+      --border-subtle: #333;
+      --success: #44ff88;
+      --code-bg: #141414;
+    }
+    
+    :root[data-theme="light"] {
+      --bg: #faf9f7;
+      --bg-elevated: #ffffff;
+      --fg: #1a1a1a;
+      --fg-secondary: #333;
+      --fg-muted: #666;
+      --fg-faint: #999;
+      --fg-ghost: #bbb;
+      --accent: #9a7b1c;
+      --accent-hover: #7a5f14;
+      --border: #e0ded8;
+      --border-subtle: #d0cec8;
+      --success: #1a8a4a;
+      --code-bg: #f0efed;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-size: 18px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Literata', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    
+    nav .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    
+    nav .logo .symbol {
+      font-size: 22px;
+      color: var(--accent);
+      font-family: 'Times New Roman', serif;
+      font-style: italic;
+    }
+    
+    nav .logo .name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--fg-muted);
+      letter-spacing: 0.12em;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+      flex: 1;
+    }
+    
+    nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover, nav a.active {
+      color: var(--accent);
+    }
+    
+    nav .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--fg-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .lens-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--success);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 0.2s ease;
+    }
+    
+    .lens-link:hover {
+      border-color: var(--success);
+      background: var(--bg);
+    }
+    
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: var(--fg);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg-secondary);
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+    
+    em {
+      font-style: italic;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--fg-faint);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+    }
+    
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      nav { padding: 0.75rem 1rem; gap: 1rem; flex-wrap: wrap; }
+      nav .links { gap: 1rem; }
+      nav .nav-right { margin-left: auto; }
+      main { padding: 5rem 1rem 2rem; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">
+      <span class="symbol">ψ</span>
+      <span class="name">SCHROEDINGER</span>
+    </a>
+    <div class="links">
+      <a href="index.html">Readme</a>
+      <a href="about.html">About</a>
+      <a href="essay.html">Essay</a>
+      <a href="play.html">Play</a>
+      <a href="architecture.html" class="active">Arch</a>
+      <a href="log.html">Log</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <svg id="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg id="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <a href="/" class="lens-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <circle cx="12" cy="12" r="8" stroke-dasharray="4 4"/>
+        </svg>
+        Lens
+      </a>
+    </div>
+  </nav>
+  
+  <main>
+    <h1>ARCHITECTURE</h1>
+<p><em>Staff engineer guide to Schroedinger&#39;s codebase</em></p>
+<hr>
+<h2>Philosophy</h2>
+<p><strong>File over app.</strong> Your markdown files are the truth. Everything else is a lens.</p>
+<p>The system is built on three layers:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                      LENSES                              │
+│   Multiple interfaces built on top of the same data     │
+│   (Drift, Observe, Accelerator, Void, Archive)          │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      BRIDGE                              │
+│   Node.js backend: file watching, embeddings, API       │
+│   The single source of truth for the runtime state      │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                      VAULT                               │
+│   Plain markdown files. The eternal format.             │
+│   Your data. Portable. Future-proof.                    │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Directory Structure</h2>
+<pre><code>schroedinger/
+├── vault/                    # Your knowledge (markdown files)
+│   ├── *.md                  # Knowledge objects (auto-generated IDs)
+│   └── _examples/            # Example KOs
+│
+├── bridge/                   # Backend server
+│   ├── src/
+│   │   ├── index.ts          # Entry point, orchestration
+│   │   ├── server.ts         # Hono HTTP/WebSocket server
+│   │   ├── db.ts             # SQLite database operations
+│   │   ├── embeddings.ts     # ONNX embedding generation
+│   │   ├── parser.ts         # Markdown parsing
+│   │   ├── watcher.ts        # File system watcher
+│   │   └── types.ts          # Shared types
+│   └── state/
+│       └── schroedinger.db   # SQLite cache (regenerable)
+│
+├── lens/                     # Frontend app
+│   ├── src/
+│   │   ├── App.svelte        # Shell &amp; router
+│   │   ├── main.ts           # Entry point
+│   │   │
+│   │   ├── core/             # Shared infrastructure
+│   │   │   ├── index.ts      # Barrel export
+│   │   │   ├── api.ts        # Bridge API client
+│   │   │   ├── stores.ts     # Global Svelte stores
+│   │   │   ├── types.ts      # TypeScript types
+│   │   │   └── theme.ts      # Dark/light mode
+│   │   │
+│   │   ├── components/       # Shared UI components
+│   │   │   ├── index.ts      # Barrel export
+│   │   │   ├── SearchPanel.svelte
+│   │   │   ├── CreatePanel.svelte
+│   │   │   ├── EditPanel.svelte
+│   │   │   ├── StatusBar.svelte
+│   │   │   └── BackButton.svelte
+│   │   │
+│   │   └── lenses/           # Individual lens apps
+│   │       ├── index.ts      # Lens exports
+│   │       ├── registry.ts   # Lens configuration
+│   │       │
+│   │       ├── launcher/     # App store
+│   │       │   └── Launcher.svelte
+│   │       │
+│   │       └── drift/        # Physics canvas lens
+│   │           ├── Drift.svelte      # Main component
+│   │           ├── Canvas.svelte     # PixiJS canvas
+│   │           ├── KOSprite.ts       # Visual KO representation
+│   │           ├── physics.ts        # Matter.js physics
+│   │           ├── spring.ts         # Animation springs
+│   │           ├── CollisionPrompt.svelte
+│   │           └── Accelerator.svelte
+│   │
+│   └── index.html            # HTML shell
+│
+├── models/                   # ML models
+│   ├── all-MiniLM-L6-v2.onnx # Embedding model
+│   └── tokenizer.json        # Tokenizer config
+│
+├── site/                     # Documentation site builder
+│   ├── build.js              # Markdown → HTML
+│   └── public/               # Built docs
+│
+├── docs/                     # Built documentation
+│   ├── index.html
+│   ├── about.html
+│   ├── essay.html
+│   ├── play.html
+│   └── log.html
+│
+├── state/                    # Runtime state
+│   └── schroedinger.db       # Main SQLite database
+│
+├── ABOUT.md                  # What this is
+├── ESSAY.md                  # The philosophy
+├── PLAY.md                   # Game design document
+├── PLAN.md                   # Development plan
+└── ARCHITECTURE.md           # This file
+</code></pre>
+<hr>
+<h2>Adding a New Lens</h2>
+<ol>
+<li><p><strong>Create the lens folder:</strong></p>
+<pre><code>lens/src/lenses/your-lens/
+├── YourLens.svelte    # Main component
+└── index.ts           # Exports
+</code></pre>
+</li>
+<li><p><strong>Register in <code>registry.ts</code>:</strong></p>
+<pre><code class="language-typescript">export const LENSES: LensConfig[] = [
+  // ...existing lenses
+  {
+    id: &#39;your-lens&#39;,
+    name: &#39;Your Lens&#39;,
+    description: &#39;What it does&#39;,
+    icon: &#39;◌&#39;,
+    color: &#39;#yourcolor&#39;,
+    colorLight: &#39;#lightvariant&#39;,
+    ready: true,  // Set to true when ready
+  },
+];
+</code></pre>
+</li>
+<li><p><strong>Add to <code>lenses/index.ts</code>:</strong></p>
+<pre><code class="language-typescript">export { default as YourLens } from &#39;./your-lens/YourLens.svelte&#39;;
+</code></pre>
+</li>
+<li><p><strong>Add to <code>App.svelte</code> router:</strong></p>
+<pre><code class="language-svelte">{:else if $currentLens === &#39;your-lens&#39;}
+  &lt;YourLens /&gt;
+</code></pre>
+</li>
+<li><p><strong>Update types in <code>core/types.ts</code>:</strong></p>
+<pre><code class="language-typescript">export type LensId = &#39;launcher&#39; | &#39;drift&#39; | ... | &#39;your-lens&#39;;
+</code></pre>
+</li>
+</ol>
+<hr>
+<h2>Core Module</h2>
+<p>The <code>core/</code> module provides shared infrastructure:</p>
+<pre><code class="language-typescript">// Import everything you need
+import { 
+  // API functions
+  fetchKOs, createKO, fetchPhysics, connectWebSocket,
+  
+  // Stores
+  kos, selectedKO, currentLens,
+  
+  // Store helpers
+  setKOs, addKO, navigateTo,
+  
+  // Theme
+  theme,
+  
+  // Types
+  type KO, type LensId
+} from &#39;../core&#39;;
+</code></pre>
+<h3>Key Stores</h3>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>currentLens</code></td>
+<td><code>LensId</code></td>
+<td>Current active lens</td>
+</tr>
+<tr>
+<td><code>kos</code></td>
+<td><code>Map&lt;string, KO&gt;</code></td>
+<td>All knowledge objects</td>
+</tr>
+<tr>
+<td><code>physics</code></td>
+<td><code>Map&lt;string, KOPhysics&gt;</code></td>
+<td>Physics state per KO</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td><code>Map&lt;string, KOMemory&gt;</code></td>
+<td>Memory/behavior per KO</td>
+</tr>
+<tr>
+<td><code>selectedKO</code></td>
+<td><code>string | null</code></td>
+<td>Currently selected KO</td>
+</tr>
+<tr>
+<td><code>isConnected</code></td>
+<td><code>boolean</code></td>
+<td>WebSocket connection status</td>
+</tr>
+</tbody></table>
+<h3>Navigation</h3>
+<pre><code class="language-typescript">import { navigateTo, currentLens } from &#39;../core&#39;;
+
+// Navigate to a lens
+navigateTo(&#39;drift&#39;);
+
+// Check current lens
+if ($currentLens === &#39;launcher&#39;) { ... }
+</code></pre>
+<hr>
+<h2>Shared Components</h2>
+<p>Use components from <code>components/</code>:</p>
+<pre><code class="language-svelte">&lt;script&gt;
+  import { SearchPanel, CreatePanel, EditPanel, StatusBar, BackButton } from &#39;../components&#39;;
+&lt;/script&gt;
+
+&lt;BackButton /&gt;
+&lt;SearchPanel /&gt;
+&lt;StatusBar /&gt;
+</code></pre>
+<hr>
+<h2>Bridge API</h2>
+<p>The bridge runs on <code>localhost:3333</code> and provides:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/kos</code></td>
+<td>GET</td>
+<td>List all KOs</td>
+</tr>
+<tr>
+<td><code>/api/kos/:id</code></td>
+<td>GET</td>
+<td>Get single KO with memory/physics</td>
+</tr>
+<tr>
+<td><code>/api/kos</code></td>
+<td>POST</td>
+<td>Create new KO</td>
+</tr>
+<tr>
+<td><code>/api/physics</code></td>
+<td>GET</td>
+<td>Get all physics states</td>
+</tr>
+<tr>
+<td><code>/api/physics/:id</code></td>
+<td>PUT</td>
+<td>Update physics</td>
+</tr>
+<tr>
+<td><code>/api/memory</code></td>
+<td>GET</td>
+<td>Get all memory states</td>
+</tr>
+<tr>
+<td><code>/api/observe/:id</code></td>
+<td>POST</td>
+<td>Record observation</td>
+</tr>
+<tr>
+<td><code>/api/collision</code></td>
+<td>POST</td>
+<td>Record collision outcome</td>
+</tr>
+<tr>
+<td><code>/api/synthesis</code></td>
+<td>POST</td>
+<td>Create synthesis from collision</td>
+</tr>
+<tr>
+<td><code>/api/links</code></td>
+<td>GET</td>
+<td>Get all links</td>
+</tr>
+<tr>
+<td><code>/api/similarities</code></td>
+<td>GET</td>
+<td>Get embedding similarities</td>
+</tr>
+<tr>
+<td><code>/api/search</code></td>
+<td>GET</td>
+<td>Search KOs</td>
+</tr>
+<tr>
+<td><code>/ws</code></td>
+<td>WebSocket</td>
+<td>Real-time updates</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>WebSocket Messages</h2>
+<p>The bridge pushes these events:</p>
+<pre><code class="language-typescript">{ type: &#39;file:created&#39;, ko: KO }
+{ type: &#39;file:changed&#39;, ko: KO }
+{ type: &#39;file:deleted&#39;, ko: { id: string } }
+{ type: &#39;synthesis:created&#39;, connection: string }
+</code></pre>
+<hr>
+<h2>Design Tokens</h2>
+<p>Use CSS variables for theming:</p>
+<pre><code class="language-css">/* Dark mode (default) */
+--bg: #0a0a0a;
+--bg-elevated: rgba(20, 20, 20, 0.8);
+--border: #252525;
+--text-primary: #ffffff;
+--text-muted: #666;
+--accent: #c9a227;
+--success: #44ff88;
+--error: #ff4444;
+
+/* Light mode (via data-theme=&quot;light&quot;) */
+--bg: #faf9f7;
+--text-primary: #1a1a1a;
+/* etc. */
+</code></pre>
+<hr>
+<h2>Conventions</h2>
+<ol>
+<li><strong>Files are sacred.</strong> Never modify a user&#39;s markdown without explicit action.</li>
+<li><strong>Database is a cache.</strong> It can always be regenerated from the vault.</li>
+<li><strong>Lenses are disposable.</strong> Build new ones, throw old ones away.</li>
+<li><strong>Theme syncs via localStorage.</strong> Key: <code>schroedinger-theme</code></li>
+<li><strong>IDs are ULIDs.</strong> Sortable, URL-safe, prefixed with <code>01</code>.</li>
+</ol>
+<hr>
+<h2>Running Locally</h2>
+<pre><code class="language-bash"># Terminal 1: Bridge
+cd bridge &amp;&amp; npm start
+
+# Terminal 2: Lens
+cd lens &amp;&amp; npm run dev
+</code></pre>
+<p>The lens proxies <code>/api</code> and <code>/ws</code> to the bridge via Vite config.</p>
+<hr>
+<h2>Key Files to Understand</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lens/src/App.svelte</code></td>
+<td>Shell &amp; router</td>
+</tr>
+<tr>
+<td><code>lens/src/core/stores.ts</code></td>
+<td>Global state</td>
+</tr>
+<tr>
+<td><code>lens/src/lenses/registry.ts</code></td>
+<td>Lens configuration</td>
+</tr>
+<tr>
+<td><code>bridge/src/server.ts</code></td>
+<td>All API endpoints</td>
+</tr>
+<tr>
+<td><code>bridge/src/db.ts</code></td>
+<td>Database operations</td>
+</tr>
+<tr>
+<td><code>PLAY.md</code></td>
+<td>Game design philosophy</td>
+</tr>
+</tbody></table>
+<hr>
+<p><em>Determinism is the enemy of discovery.</em></p>
+
+  </main>
+  
+  <footer>
+    <p>determinism is the enemy of discovery</p>
+  </footer>
+  
+  <script>
+    function updateThemeIcons() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      document.getElementById('sun-icon').style.display = theme === 'dark' ? 'block' : 'none';
+      document.getElementById('moon-icon').style.display = theme === 'light' ? 'block' : 'none';
+    }
+    
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('schroedinger-theme', next);
+      updateThemeIcons();
+    }
+    
+    updateThemeIcons();
+  </script>
+</body>
+</html>

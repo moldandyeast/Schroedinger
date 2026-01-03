@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { kos, physics } from './stores';
-  import type { KO } from './types';
+  import { kos, physics } from '../../core';
+  import type { KO } from '../../core';
   
   export let koIdA: string;
   export let koIdB: string;

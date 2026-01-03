@@ -1,7 +1,16 @@
-import { writable, derived, type Writable } from 'svelte/store';
-import type { KO, KOPhysics, KOMemory, Link, Traits } from './types';
+/**
+ * Global state stores for the Schroedinger system.
+ * These stores are shared across all lenses.
+ */
 
-// ============ Core Stores ============
+import { writable, derived, type Writable } from 'svelte/store';
+import type { KO, KOPhysics, KOMemory, Link, Traits, LensId } from './types';
+
+// ============ Navigation ============
+
+export const currentLens: Writable<LensId> = writable('launcher');
+
+// ============ Core Data Stores ============
 
 export const kos: Writable<Map<string, KO>> = writable(new Map());
 export const physics: Writable<Map<string, KOPhysics>> = writable(new Map());
@@ -9,24 +18,17 @@ export const memory: Writable<Map<string, KOMemory>> = writable(new Map());
 export const links: Writable<Link[]> = writable([]);
 export const similarities: Writable<Record<string, Record<string, number>>> = writable({});
 
+// ============ Connection State ============
+
+export const isConnected: Writable<boolean> = writable(false);
+
 // ============ UI State ============
 
 export const selectedKO: Writable<string | null> = writable(null);
 export const hoveredKO: Writable<string | null> = writable(null);
 export const activeCollision: Writable<{ koIdA: string; koIdB: string } | null> = writable(null);
-export const isConnected: Writable<boolean> = writable(false);
 export const searchQuery: Writable<string> = writable('');
 export const searchResults: Writable<KO[]> = writable([]);
-export const isEditing: Writable<boolean> = writable(false);
-export const editingKO: Writable<KO | null> = writable(null);
-
-// ============ Camera State ============
-
-export const camera = writable({
-  x: 0,
-  y: 0,
-  zoom: 1,
-});
 
 // ============ Derived Stores ============
 
@@ -47,7 +49,12 @@ export const orphanCount = derived([kos, links], ([$kos, $links]) => {
   return count;
 });
 
-// ============ Helper Functions ============
+export const selectedKOData = derived([selectedKO, kos], ([$selectedKO, $kos]) => {
+  if (!$selectedKO) return null;
+  return $kos.get($selectedKO) || null;
+});
+
+// ============ Setter Functions ============
 
 export function setKOs(koArray: KO[]): void {
   kos.set(new Map(koArray.map(ko => [ko.id, ko])));
@@ -111,14 +118,37 @@ export function setSimilarities(sims: Record<string, Record<string, number>>): v
   similarities.set(sims);
 }
 
+// ============ Utility Functions ============
+
 export function getTraits(koId: string): Traits {
   let traits: Traits = {};
-  memory.subscribe(m => {
+  const unsubscribe = memory.subscribe(m => {
     const mem = m.get(koId);
     if (mem) {
       traits = mem.behavioral_traits;
     }
-  })();
+  });
+  unsubscribe();
   return traits;
+}
+
+/** Reset all stores to initial state */
+export function resetStores(): void {
+  kos.set(new Map());
+  physics.set(new Map());
+  memory.set(new Map());
+  links.set([]);
+  similarities.set({});
+  selectedKO.set(null);
+  hoveredKO.set(null);
+  activeCollision.set(null);
+  searchQuery.set('');
+  searchResults.set([]);
+  isConnected.set(false);
+}
+
+/** Navigate to a lens */
+export function navigateTo(lens: LensId): void {
+  currentLens.set(lens);
 }
 

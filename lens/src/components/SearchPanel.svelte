@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { searchQuery, searchResults, kos, selectedKO } from './stores';
-  import { searchKOs } from './api';
-  import type { KO } from './types';
+  import { searchQuery, searchResults, selectedKO, searchKOs } from '../core';
+  import type { KO } from '../core';
   
   let debounceTimer: ReturnType<typeof setTimeout>;
   
@@ -91,17 +90,17 @@
   .search-icon {
     position: absolute;
     left: 12px;
-    color: #666;
+    color: var(--text-muted, #666);
     pointer-events: none;
   }
   
   input {
     width: 100%;
     padding: 12px 40px 12px 40px;
-    background: rgba(26, 26, 26, 0.95);
-    border: 1px solid #333;
+    background: var(--bg-elevated, rgba(26, 26, 26, 0.95));
+    border: 1px solid var(--border, #333);
     border-radius: 8px;
-    color: #fff;
+    color: var(--text-primary, #fff);
     font-family: 'Literata', Georgia, serif;
     font-size: 14px;
     outline: none;
@@ -114,7 +113,7 @@
   }
   
   input::placeholder {
-    color: #666;
+    color: var(--text-muted, #666);
   }
   
   .clear-btn {
@@ -122,7 +121,7 @@
     right: 8px;
     background: none;
     border: none;
-    color: #666;
+    color: var(--text-muted, #666);
     cursor: pointer;
     padding: 4px;
     display: flex;
@@ -131,13 +130,13 @@
   }
   
   .clear-btn:hover {
-    color: #fff;
+    color: var(--text-primary, #fff);
   }
   
   .search-results {
     margin-top: 4px;
-    background: rgba(26, 26, 26, 0.98);
-    border: 1px solid #333;
+    background: var(--bg-elevated, rgba(26, 26, 26, 0.98));
+    border: 1px solid var(--border, #333);
     border-radius: 8px;
     max-height: 300px;
     overflow-y: auto;
@@ -151,8 +150,8 @@
     padding: 10px 14px;
     background: none;
     border: none;
-    border-bottom: 1px solid #222;
-    color: #fff;
+    border-bottom: 1px solid var(--border-subtle, #222);
+    color: var(--text-primary, #fff);
     cursor: pointer;
     text-align: left;
     transition: background 0.15s;
@@ -178,7 +177,7 @@
   .result-type {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    color: #44ff88;
+    color: var(--success, #44ff88);
     background: rgba(68, 255, 136, 0.1);
     padding: 2px 6px;
     border-radius: 3px;

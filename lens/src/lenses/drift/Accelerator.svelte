@@ -1,8 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { kos, physics, selectedKO } from './stores';
-  import { fetchAccelerator } from './api';
-  import type { KO, AcceleratorSet } from './types';
+  import { kos, physics, selectedKO, fetchAccelerator } from '../../core';
+  import type { KO, AcceleratorSet } from '../../core';
   
   const dispatch = createEventDispatcher<{
     focus: { ids: string[] };

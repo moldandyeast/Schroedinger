@@ -1,6 +1,6 @@
 import { Container, Graphics, Text, FederatedPointerEvent } from 'pixi.js';
 import { Spring2D } from './spring';
-import type { KO, KOPhysics, Traits } from './types';
+import type { KO, KOPhysics, Traits } from '../../core';
 
 /**
  * Visual representation of a Knowledge Object on the canvas

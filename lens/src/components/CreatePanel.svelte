@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createKO } from './api';
+  import { createKO } from '../core';
+  
+  export let isOpen = false;
   
   let title = '';
   let isCreating = false;
   let inputEl: HTMLInputElement;
-  
-  export let isOpen = false;
   
   async function handleCreate() {
     if (!title.trim() || isCreating) return;
@@ -70,8 +70,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: var(--bg-elevated, #1a1a1a);
+    border: 1px solid var(--border, #333);
     border-radius: 12px;
     padding: 24px;
     width: 400px;
@@ -95,16 +95,16 @@
     font-family: 'Literata', Georgia, serif;
     font-size: 18px;
     font-weight: 500;
-    color: #fff;
+    color: var(--text-primary, #fff);
   }
   
   input {
     width: 100%;
     padding: 12px 14px;
-    background: #0a0a0a;
-    border: 1px solid #444;
+    background: var(--bg, #0a0a0a);
+    border: 1px solid var(--border-subtle, #444);
     border-radius: 8px;
-    color: #fff;
+    color: var(--text-primary, #fff);
     font-family: 'Literata', Georgia, serif;
     font-size: 16px;
     outline: none;
@@ -116,7 +116,7 @@
   }
   
   input::placeholder {
-    color: #666;
+    color: var(--text-muted, #666);
     font-style: italic;
   }
   
@@ -142,13 +142,13 @@
   }
   
   .cancel {
-    background: #333;
-    color: #888;
+    background: var(--border, #333);
+    color: var(--text-muted, #888);
   }
   
   .cancel:hover {
-    background: #444;
-    color: #aaa;
+    background: var(--border-subtle, #444);
+    color: var(--text-secondary, #aaa);
   }
   
   .create {
@@ -164,7 +164,7 @@
     margin-top: 12px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #666;
+    color: var(--text-muted, #666);
     text-align: center;
   }
 </style>

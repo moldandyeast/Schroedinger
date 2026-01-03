@@ -1,5 +1,5 @@
 import Matter from 'matter-js';
-import type { Traits } from './types';
+import type { Traits } from '../../core';
 
 const { Engine, World, Bodies, Body, Events, Vector } = Matter;
 

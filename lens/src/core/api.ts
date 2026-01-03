@@ -1,3 +1,8 @@
+/**
+ * API client for the Schroedinger Bridge.
+ * All communication with the backend goes through this module.
+ */
+
 import type { KO, KOPhysics, KOMemory, Link, AcceleratorSet, WSMessage } from './types';
 
 const API_BASE = '/api';
@@ -24,6 +29,15 @@ export async function createKO(title: string, content?: string): Promise<{ filen
   });
   if (!res.ok) throw new Error('Failed to create KO');
   return res.json();
+}
+
+export async function updateKO(id: string, updates: Partial<{ title: string; content: string }>): Promise<void> {
+  const res = await fetch(`${API_BASE}/kos/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error('Failed to update KO');
 }
 
 // ============ Physics API ============
@@ -125,17 +139,6 @@ export async function fetchAccelerator(anchorId: string): Promise<AcceleratorSet
   return res.json();
 }
 
-// ============ Update KO API ============
-
-export async function updateKO(id: string, updates: Partial<{ title: string; content: string }>): Promise<void> {
-  const res = await fetch(`${API_BASE}/kos/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updates),
-  });
-  if (!res.ok) throw new Error('Failed to update KO');
-}
-
 // ============ Links API ============
 
 export async function fetchLinks(): Promise<Link[]> {
@@ -177,15 +180,22 @@ export async function searchKOs(query: string, limit: number = 20): Promise<KO[]
 
 // ============ WebSocket ============
 
+let wsInstance: WebSocket | null = null;
+
 export function connectWebSocket(onMessage: (message: WSMessage) => void): WebSocket {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+  // Close existing connection if any
+  if (wsInstance) {
+    wsInstance.close();
+  }
   
-  ws.onopen = () => {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  wsInstance = new WebSocket(`${protocol}//${window.location.host}/ws`);
+  
+  wsInstance.onopen = () => {
     console.log('🔌 WebSocket connected');
   };
   
-  ws.onmessage = (event) => {
+  wsInstance.onmessage = (event) => {
     try {
       const message = JSON.parse(event.data);
       onMessage(message);
@@ -194,11 +204,11 @@ export function connectWebSocket(onMessage: (message: WSMessage) => void): WebSo
     }
   };
   
-  ws.onerror = (error) => {
+  wsInstance.onerror = (error) => {
     console.error('WebSocket error:', error);
   };
   
-  ws.onclose = () => {
+  wsInstance.onclose = () => {
     console.log('🔌 WebSocket disconnected');
     // Attempt to reconnect after 3 seconds
     setTimeout(() => {
@@ -207,6 +217,13 @@ export function connectWebSocket(onMessage: (message: WSMessage) => void): WebSo
     }, 3000);
   };
   
-  return ws;
+  return wsInstance;
+}
+
+export function disconnectWebSocket(): void {
+  if (wsInstance) {
+    wsInstance.close();
+    wsInstance = null;
+  }
 }
 

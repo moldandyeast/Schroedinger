@@ -1,4 +1,9 @@
-// Types for the Lens (matching Bridge types)
+/**
+ * Core types for the Schroedinger system.
+ * These types match the Bridge API types.
+ */
+
+// ============ Knowledge Objects ============
 
 export interface KO {
   id: string;
@@ -12,6 +17,8 @@ export interface KO {
   file_path: string;
 }
 
+// ============ Physics ============
+
 export interface KOPhysics {
   ko_id: string;
   position_x: number;
@@ -22,6 +29,8 @@ export interface KOPhysics {
   entropy: number;
   is_anchored: boolean;
 }
+
+// ============ Memory & Behavior ============
 
 export interface KOMemory {
   ko_id: string;
@@ -52,6 +61,8 @@ export interface EvolutionEvent {
   details: Record<string, unknown>;
 }
 
+// ============ Links ============
+
 export interface Link {
   source_id: string;
   target_id: string;
@@ -59,14 +70,32 @@ export interface Link {
   created_at: string;
 }
 
+// ============ WebSocket ============
+
 export interface WSMessage {
   type: string;
   [key: string]: unknown;
 }
 
+// ============ Discovery ============
+
 export interface AcceleratorSet {
   anchor: KO;
   relatives: KO[];
   strangers: KO[];
+}
+
+// ============ Lens System ============
+
+export type LensId = 'launcher' | 'drift' | 'observe' | 'accelerator' | 'void' | 'archive';
+
+export interface LensConfig {
+  id: LensId;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  colorLight: string;
+  ready: boolean;
 }
 
