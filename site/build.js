@@ -252,9 +252,9 @@ const template = (title, nav, content, currentPage) => `<!DOCTYPE html>
 </head>
 <body>
   <nav>
-    <a href="/" class="logo">SCHROEDINGER</a>
+    <a href="index.html" class="logo">SCHROEDINGER</a>
     <div class="links">
-      ${docs.map(d => `<a href="/${d.dest}"${d.dest === currentPage ? ' class="active"' : ''}>${d.nav}</a>`).join('\n      ')}
+      ${docs.map(d => `<a href="${d.dest}"${d.dest === currentPage ? ' class="active"' : ''}>${d.nav}</a>`).join('\n      ')}
     </div>
   </nav>
   
