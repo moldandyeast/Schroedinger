@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schroedinger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e0e0e0;
+      --fg-muted: #888;
+      --accent: #c9a227;
+      --border: #2a2a2a;
+      --code-bg: #141414;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-size: 18px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Crimson Pro', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover, nav a.active {
+      color: var(--fg);
+    }
+    
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg);
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    em {
+      font-style: italic;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      nav { padding: 0.75rem 1rem; gap: 1rem; }
+      nav .links { gap: 1rem; }
+      main { padding: 5rem 1rem 2rem; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SCHROEDINGER</a>
+    <div class="links">
+      <a href="/index.html" class="active">Readme</a>
+      <a href="/about.html">About</a>
+      <a href="/essay.html">Essay</a>
+      <a href="/play.html">Play</a>
+      <a href="/log.html">Log</a>
+    </div>
+  </nav>
+  
+  <main>
+    <h1>SCHROEDINGER</h1>
+<p><strong>A Local-First Knowledge Instrument</strong></p>
+<p>Version: 0.1.0<br>Status: Working Prototype<br>License: MIT</p>
+<hr>
+<h2>What This Is</h2>
+<p>Schroedinger is a personal knowledge system where your thoughts exist as plain markdown files on your computer. No database lock-in. No cloud sync. No account. Just a folder of files that you can open with any text editor, today or fifty years from now.</p>
+<p>The software provides an interactive canvas where notes have physics, drift randomly over time, collide to form unexpected connections, and develop their own behaviors and memories.</p>
+<p><strong>The core thesis</strong>: determinism is the enemy of discovery.</p>
+<hr>
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># Clone and install
+git clone &lt;repo&gt;
+cd schroedinger
+npm install
+cd bridge &amp;&amp; npm install
+cd ../lens &amp;&amp; npm install
+cd ..
+
+# Run both servers
+npm run dev
+
+# Open http://localhost:5173
+</code></pre>
+<hr>
+<h2>Architecture</h2>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                      THE LENS                           │
+│            (Svelte 5 + PixiJS 8 + matter.js)           │
+│                                                         │
+│    Canvas  ←→  Search  ←→  Edit Panel  ←→  Accelerator │
+│                                                         │
+│                   WebSocket + REST                      │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────┴──────────────────────────────────┐
+│                 THE BRIDGE                              │
+│          (Node.js + Hono + SQLite + ONNX)              │
+│                                                         │
+│  • File watcher (chokidar)                              │
+│  • Vector embeddings (all-MiniLM-L6-v2)                 │
+│  • Physics simulation (matter.js)                       │
+│  • Object memory &amp; agency system                        │
+│  • localhost:3333                                       │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+┌──────────────────────┴──────────────────────────────────┐
+│               THE SUBSTRATE                             │
+│               (Your Local Folder)                       │
+│                                                         │
+│  /vault/*.md           (Your thoughts - sacred)         │
+│  /state/schroedinger.db (Cache - can be rebuilt)        │
+│  /models/*.onnx        (Embedding model)                │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>What&#39;s Implemented</h2>
+<h3>Bridge (Backend)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File Watcher</td>
+<td>✅</td>
+<td>Syncs vault/*.md to SQLite via chokidar</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>✅</td>
+<td>Full CRUD for KOs, links, physics, memory</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>✅</td>
+<td>Real-time updates on file changes</td>
+</tr>
+<tr>
+<td>Embeddings</td>
+<td>✅</td>
+<td>ONNX Runtime + all-MiniLM-L6-v2 (384-dim)</td>
+</tr>
+<tr>
+<td>Similarity Search</td>
+<td>✅</td>
+<td>Cosine similarity in-memory</td>
+</tr>
+<tr>
+<td>Full-Text Search</td>
+<td>✅</td>
+<td>LIKE-based (FTS5 ready)</td>
+</tr>
+<tr>
+<td>Physics State</td>
+<td>✅</td>
+<td>Persisted positions/velocities</td>
+</tr>
+<tr>
+<td>Memory System</td>
+<td>✅</td>
+<td>Observations, collisions, affinities, rivalries</td>
+</tr>
+<tr>
+<td>Trait Computation</td>
+<td>✅</td>
+<td>Restless, stable, magnetic, volatile, forgotten, ancient</td>
+</tr>
+</tbody></table>
+<h3>Lens (Frontend)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Canvas</td>
+<td>✅</td>
+<td>PixiJS 8 with pan/zoom</td>
+</tr>
+<tr>
+<td>KO Sprites</td>
+<td>✅</td>
+<td>Cards with physics, spring animations</td>
+</tr>
+<tr>
+<td>Drag &amp; Drop</td>
+<td>✅</td>
+<td>Drag to move, positions saved</td>
+</tr>
+<tr>
+<td>Collision Detection</td>
+<td>✅</td>
+<td>matter.js collision events</td>
+</tr>
+<tr>
+<td>Collision Prompt</td>
+<td>✅</td>
+<td>Snap (synthesize) or Dismiss</td>
+</tr>
+<tr>
+<td>Search Panel</td>
+<td>✅</td>
+<td>Live search with debounce</td>
+</tr>
+<tr>
+<td>Create Panel</td>
+<td>✅</td>
+<td>New thought dialog (⌘N)</td>
+</tr>
+<tr>
+<td>Edit Panel</td>
+<td>✅</td>
+<td>Sidebar with content, memory, traits, physics</td>
+</tr>
+<tr>
+<td>Link Visualization</td>
+<td>✅</td>
+<td>Curved edges between connected KOs</td>
+</tr>
+<tr>
+<td>Semantic Gravity</td>
+<td>✅</td>
+<td>Attraction based on embedding similarity</td>
+</tr>
+<tr>
+<td>Similarity Lines</td>
+<td>✅</td>
+<td>Faint lines between similar (&gt;0.6) KOs</td>
+</tr>
+<tr>
+<td>Observation Glow</td>
+<td>✅</td>
+<td>Hover glow, records observation time</td>
+</tr>
+<tr>
+<td>Trait Visuals</td>
+<td>✅</td>
+<td>Shimmer, sparks, border colors</td>
+</tr>
+<tr>
+<td>Particle Accelerator</td>
+<td>✅</td>
+<td>Focus mode with relatives + strangers</td>
+</tr>
+<tr>
+<td>Autonomous Behaviors</td>
+<td>✅</td>
+<td>Magnetic seeks, volatile chain reactions</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Technology Stack</h2>
+<h3>Bridge</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Runtime</td>
+<td>Node.js 22+ (tsx for dev)</td>
+</tr>
+<tr>
+<td>HTTP Server</td>
+<td>Hono</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>SQLite (better-sqlite3)</td>
+</tr>
+<tr>
+<td>File Watcher</td>
+<td>chokidar</td>
+</tr>
+<tr>
+<td>Embeddings</td>
+<td>onnxruntime-node + all-MiniLM-L6-v2</td>
+</tr>
+<tr>
+<td>Physics</td>
+<td>matter.js (headless)</td>
+</tr>
+</tbody></table>
+<h3>Lens</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Framework</td>
+<td>Svelte 5</td>
+</tr>
+<tr>
+<td>Bundler</td>
+<td>Vite 5</td>
+</tr>
+<tr>
+<td>Rendering</td>
+<td>PixiJS 8</td>
+</tr>
+<tr>
+<td>Physics</td>
+<td>matter.js</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Svelte stores</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Folder Structure</h2>
+<pre><code>schroedinger/
+├── vault/                    # Your knowledge objects (SACRED)
+│   └── *.md                  
+├── state/
+│   └── schroedinger.db       # SQLite database (can be rebuilt)
+├── models/
+│   ├── all-MiniLM-L6-v2.onnx # Embedding model (86MB)
+│   └── tokenizer.json        # Tokenizer config
+├── bridge/
+│   ├── src/
+│   │   ├── index.ts          # Entry point, server setup
+│   │   ├── server.ts         # Hono routes
+│   │   ├── watcher.ts        # File system observer
+│   │   ├── db.ts             # SQLite operations + memory
+│   │   ├── embeddings.ts     # ONNX embedding pipeline
+│   │   ├── parser.ts         # Markdown + YAML frontmatter
+│   │   └── types.ts          # TypeScript types
+│   └── package.json
+├── lens/
+│   ├── src/
+│   │   ├── App.svelte        # Main application
+│   │   ├── main.ts           # Entry point
+│   │   └── lib/
+│   │       ├── Canvas.svelte       # PixiJS canvas + physics loop
+│   │       ├── KOSprite.ts         # Knowledge object visual
+│   │       ├── CollisionPrompt.svelte
+│   │       ├── SearchPanel.svelte
+│   │       ├── CreatePanel.svelte
+│   │       ├── EditPanel.svelte
+│   │       ├── Accelerator.svelte
+│   │       ├── api.ts              # API client
+│   │       ├── physics.ts          # matter.js wrapper
+│   │       ├── spring.ts           # Animation springs
+│   │       ├── stores.ts           # Svelte stores
+│   │       └── types.ts            # TypeScript types
+│   ├── package.json
+│   └── vite.config.ts
+├── docs/                     # Documentation site source
+├── package.json              # Root scripts
+├── README.md                 # This file
+├── PLAY.md                   # Game design document
+├── ESSAY.md                  # Philosophy
+└── ABOUT.md                  # Summary
+</code></pre>
+<hr>
+<h2>API Reference</h2>
+<h3>Knowledge Objects</h3>
+<pre><code>GET    /api/kos                    # List all KOs
+GET    /api/kos/:id                # Get KO with memory + physics
+POST   /api/kos                    # Create KO
+PUT    /api/kos/:id                # Update KO
+DELETE /api/kos/:id                # Delete KO
+</code></pre>
+<h3>Discovery</h3>
+<pre><code>GET    /api/search?q=term          # Full-text search
+GET    /api/similar/:id?n=5        # Semantic nearest neighbors
+GET    /api/similarities           # All pairwise similarities
+GET    /api/random?n=5             # Random KOs
+GET    /api/forgotten?days=30      # Unobserved KOs
+GET    /api/orphans                # KOs with no links
+GET    /api/accelerator/:id        # Anchor + relatives + strangers
+</code></pre>
+<h3>Relationships</h3>
+<pre><code>GET    /api/links                  # All links
+POST   /api/links                  # Create link
+DELETE /api/links/:source/:target  # Remove link
+</code></pre>
+<h3>Physics &amp; Memory</h3>
+<pre><code>GET    /api/physics                # All positions/velocities
+PUT    /api/physics/:id            # Update position
+PUT    /api/physics                # Batch update positions
+POST   /api/observe/:id            # Record observation
+POST   /api/collision              # Record collision outcome
+POST   /api/synthesis              # Create synthesis (bridge note)
+</code></pre>
+<h3>WebSocket</h3>
+<pre><code>WS     /ws
+  → connected
+  → file:created, file:changed, file:deleted
+  → ko:observed, ko:collided
+  → synthesis:created
+  → link:created, link:deleted
+</code></pre>
+<hr>
+<h2>Database Schema</h2>
+<pre><code class="language-sql">-- Core knowledge objects
+CREATE TABLE kos (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  content_hash TEXT NOT NULL,
+  type TEXT DEFAULT &#39;fragment&#39;,
+  tags TEXT DEFAULT &#39;[]&#39;,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  file_path TEXT NOT NULL UNIQUE
+);
+
+-- Explicit links between KOs
+CREATE TABLE links (
+  source_id TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  link_type TEXT DEFAULT &#39;explicit&#39;,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (source_id, target_id)
+);
+
+-- Object memory and behavior
+CREATE TABLE ko_memory (
+  ko_id TEXT PRIMARY KEY,
+  observation_count INTEGER DEFAULT 0,
+  last_observed TEXT,
+  total_observation_time INTEGER DEFAULT 0,
+  collision_count INTEGER DEFAULT 0,
+  drift_distance REAL DEFAULT 0,
+  affinity_scores TEXT DEFAULT &#39;{}&#39;,
+  rivalry_scores TEXT DEFAULT &#39;{}&#39;,
+  behavioral_traits TEXT DEFAULT &#39;{}&#39;,
+  evolution_history TEXT DEFAULT &#39;[]&#39;
+);
+
+-- Physics state
+CREATE TABLE ko_physics (
+  ko_id TEXT PRIMARY KEY,
+  position_x REAL DEFAULT 0,
+  position_y REAL DEFAULT 0,
+  velocity_x REAL DEFAULT 0,
+  velocity_y REAL DEFAULT 0,
+  mass REAL DEFAULT 1.0,
+  entropy REAL DEFAULT 1.0,
+  is_anchored INTEGER DEFAULT 0
+);
+</code></pre>
+<hr>
+<h2>Keyboard Shortcuts</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>⌘N</code> / <code>Ctrl+N</code></td>
+<td>Create new thought</td>
+</tr>
+<tr>
+<td><code>Escape</code></td>
+<td>Close panels, deselect</td>
+</tr>
+<tr>
+<td>Scroll</td>
+<td>Zoom canvas</td>
+</tr>
+<tr>
+<td>Drag canvas</td>
+<td>Pan view</td>
+</tr>
+<tr>
+<td>Drag KO</td>
+<td>Move object</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>How It Works</h2>
+<ol>
+<li><strong>Thoughts drift</strong> based on entropy (new = high entropy = more movement)</li>
+<li><strong>Similar thoughts attract</strong> via semantic gravity from embeddings</li>
+<li><strong>Collisions trigger prompts</strong> — snap to synthesize, dismiss to create rivalry</li>
+<li><strong>Objects remember</strong> — observations reduce entropy, collisions build relationships</li>
+<li><strong>Traits emerge</strong> — behaviors like &quot;restless&quot; or &quot;magnetic&quot; develop over time</li>
+<li><strong>Autonomous behaviors</strong> — magnetic objects seek affinities, volatile ones cause chain reactions</li>
+</ol>
+<hr>
+<h2>Constraints</h2>
+<ul>
+<li><strong>No cloud sync</strong>: Use Syncthing or Dropbox on the folder if needed</li>
+<li><strong>No accounts</strong>: Single-user, local-first</li>
+<li><strong>No proprietary formats</strong>: Markdown + SQLite only</li>
+<li><strong>No external APIs</strong>: All AI runs locally via ONNX</li>
+<li><strong>No determinism</strong>: The system must surprise you</li>
+</ul>
+<hr>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=Tk2TDPwV3Ho">Mark Cerny - Developing Your Game Idea</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Gunpei_Yokoi">Gunpei Yokoi - Lateral Thinking with Withered Technology</a></li>
+<li><a href="https://publicdelivery.org/fischli-weiss-how-to-work-better/">Fischli &amp; Weiss - How to Work Better</a></li>
+<li><a href="https://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems">Gödel&#39;s Incompleteness Theorems</a></li>
+</ul>
+
+  </main>
+  
+  <footer>
+    <p>Determinism is the enemy of discovery.</p>
+  </footer>
+</body>
+</html>

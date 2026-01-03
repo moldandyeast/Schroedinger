@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Document — Schroedinger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e0e0e0;
+      --fg-muted: #888;
+      --accent: #c9a227;
+      --border: #2a2a2a;
+      --code-bg: #141414;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-size: 18px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Crimson Pro', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover, nav a.active {
+      color: var(--fg);
+    }
+    
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg);
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    em {
+      font-style: italic;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      nav { padding: 0.75rem 1rem; gap: 1rem; }
+      nav .links { gap: 1rem; }
+      main { padding: 5rem 1rem 2rem; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SCHROEDINGER</a>
+    <div class="links">
+      <a href="/index.html">Readme</a>
+      <a href="/about.html">About</a>
+      <a href="/essay.html">Essay</a>
+      <a href="/play.html" class="active">Play</a>
+      <a href="/log.html">Log</a>
+    </div>
+  </nav>
+  
+  <main>
+    <h1>PLAY DOCUMENT</h1>
+<p><em>Schroedinger as a game design problem</em></p>
+<hr>
+<h2>Core Loop</h2>
+<pre><code>        ┌──────────────────────┐
+        │                      │
+        ▼                      │
+   ┌─────────┐           ┌─────────┐
+   │  DRIFT  │──────────▶│ COLLIDE │
+   └─────────┘           └─────────┘
+        ▲                      │
+        │                      ▼
+   ┌─────────┐           ┌─────────┐
+   │ RELEASE │◀──────────│  SNAP   │
+   └─────────┘           └─────────┘
+        │                      
+        ▼                      
+   ┌─────────┐                 
+   │ EVOLVE  │  ← Objects remember and adapt
+   └─────────┘                 
+</code></pre>
+<p><strong>Drift</strong>: Objects move through the canvas based on entropy, semantic gravity, and behavioral traits. This is the randomness engine—the source of unexpected encounters.</p>
+<p><strong>Collide</strong>: When two objects touch, the game pauses for a decision. This is the core mechanic. The collision prompt is the central interaction.</p>
+<p><strong>Snap</strong>: Name the connection. A new synthesis is born—a bridge between two previously unconnected thoughts. This is the reward. The moment of creation.</p>
+<p><strong>Release</strong>: The new synthesis enters the world with high entropy. It&#39;s unstable, energetic, seeking its own collisions.</p>
+<p><strong>Evolve</strong>: Objects remember what happened. Affinities form. Rivalries develop. Traits emerge. The canvas becomes a living ecosystem.</p>
+<hr>
+<h2>Physics of Thought</h2>
+<p>Every Knowledge Object has physical properties:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Mass</strong></td>
+<td>Accumulated attention</td>
+<td>Higher mass = more gravitational pull, slower movement</td>
+</tr>
+<tr>
+<td><strong>Entropy</strong></td>
+<td>Freshness/instability</td>
+<td>Higher entropy = more random movement, shimmer effect</td>
+</tr>
+<tr>
+<td><strong>Position</strong></td>
+<td>Location on canvas</td>
+<td>Persisted between sessions</td>
+</tr>
+<tr>
+<td><strong>Velocity</strong></td>
+<td>Current momentum</td>
+<td>Decays over time, affected by forces</td>
+</tr>
+</tbody></table>
+<h3>Forces</h3>
+<table>
+<thead>
+<tr>
+<th>Force</th>
+<th>Source</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Drift</strong></td>
+<td>Base entropy + noise</td>
+<td>Random wandering, strength based on entropy</td>
+</tr>
+<tr>
+<td><strong>Semantic Gravity</strong></td>
+<td>Embedding similarity</td>
+<td>Similar thoughts attract (&gt;0.5), very similar repel (&gt;0.9)</td>
+</tr>
+<tr>
+<td><strong>Affinity Pull</strong></td>
+<td>Previous syntheses</td>
+<td>Objects that created together drift together</td>
+</tr>
+<tr>
+<td><strong>Rivalry Push</strong></td>
+<td>Previous dismissals</td>
+<td>Objects that were rejected push apart</td>
+</tr>
+<tr>
+<td><strong>Trait Modifiers</strong></td>
+<td>Behavioral state</td>
+<td>Restless = 2.5x drift, Stable = 0.2x drift</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Object Agency System</h2>
+<h3>Memory</h3>
+<p>Every object remembers:</p>
+<pre><code class="language-typescript">{
+  observation_count: number,      // How often focused
+  total_observation_time: number, // Cumulative attention (ms)
+  collision_count: number,        // How many collisions
+  affinity_scores: { [id]: number }, // Positive relationships
+  rivalry_scores: { [id]: number },  // Negative relationships
+  evolution_history: Event[]      // What happened
+}
+</code></pre>
+<h3>Behavioral Traits</h3>
+<table>
+<thead>
+<tr>
+<th>Trait</th>
+<th>Trigger</th>
+<th>Behavior</th>
+<th>Randomness Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Restless</strong></td>
+<td>Low observation, high drift</td>
+<td>Moves faster, seeks collisions</td>
+<td>2.5x drift multiplier</td>
+</tr>
+<tr>
+<td><strong>Stable</strong></td>
+<td>High observation, many links</td>
+<td>Resists movement</td>
+<td>0.2x drift multiplier</td>
+</tr>
+<tr>
+<td><strong>Magnetic</strong></td>
+<td>Many affinities</td>
+<td>Actively seeks high-affinity targets</td>
+<td>Autonomous seeking behavior</td>
+</tr>
+<tr>
+<td><strong>Volatile</strong></td>
+<td>Many rivalries</td>
+<td>Sudden movements, chain reactions</td>
+<td>Random impulses, affects neighbors</td>
+</tr>
+<tr>
+<td><strong>Forgotten</strong></td>
+<td>No observation 30+ days</td>
+<td>Fades, drifts to edges</td>
+<td>0.5x drift toward periphery</td>
+</tr>
+<tr>
+<td><strong>Ancient</strong></td>
+<td>20+ observations, high mass</td>
+<td>Gold border, gravitational center</td>
+<td>High mass, slow but influential</td>
+</tr>
+</tbody></table>
+<h3>Autonomous Behaviors</h3>
+<p>Objects with certain traits act on their own:</p>
+<ul>
+<li><strong>Magnetic</strong> objects periodically move toward their strongest affinity</li>
+<li><strong>Volatile</strong> objects occasionally trigger impulses that affect nearby objects</li>
+<li><strong>Emergent</strong> objects (from synthesis) gravitate toward the center of mass</li>
+</ul>
+<hr>
+<h2>Mechanics</h2>
+<h3>The Collision</h3>
+<p>When two objects touch:</p>
+<ol>
+<li>Physics pauses for those objects</li>
+<li>Collision prompt appears with both titles</li>
+<li>Player chooses:<ul>
+<li><strong>Snap</strong>: Enter a connection name → create synthesis</li>
+<li><strong>Dismiss</strong>: Mark as incompatible → create rivalry</li>
+<li><strong>Ignore</strong>: No effect, collision cooldown starts</li>
+</ul>
+</li>
+</ol>
+<h3>Synthesis Creation</h3>
+<p>When you snap:</p>
+<ol>
+<li>New markdown file created with frontmatter linking parents</li>
+<li>New object spawns between parents with high entropy</li>
+<li>Both parents gain affinity for each other</li>
+<li>Both parents gain affinity for the child</li>
+<li>Links created in database</li>
+</ol>
+<h3>The Accelerator</h3>
+<p>Select any object, click Accelerator:</p>
+<ol>
+<li>Shows the <strong>anchor</strong> (selected object)</li>
+<li>Shows <strong>relatives</strong> (objects already linked)</li>
+<li>Shows <strong>strangers</strong> (random unlinked objects)</li>
+<li>Focus button gathers them together for intentional collision</li>
+</ol>
+<p>This is the controlled experiment—when you want to deliberately seek connections.</p>
+<hr>
+<h2>Visual Language</h2>
+<h3>Object States</h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Visual</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Default</td>
+<td>Dark card, white text, subtle border</td>
+</tr>
+<tr>
+<td>Hovered</td>
+<td>Glow effect (green/blue/gold based on traits)</td>
+</tr>
+<tr>
+<td>Selected</td>
+<td>Scale 1.02, info panel opens</td>
+</tr>
+<tr>
+<td>High entropy</td>
+<td>Shimmer effect, slight position noise</td>
+</tr>
+<tr>
+<td>Forgotten</td>
+<td>40% opacity, drifts to edges</td>
+</tr>
+<tr>
+<td>Ancient</td>
+<td>Gold border, 2px width</td>
+</tr>
+<tr>
+<td>Magnetic</td>
+<td>Blue glow</td>
+</tr>
+<tr>
+<td>Volatile</td>
+<td>Red border, occasional sparks</td>
+</tr>
+</tbody></table>
+<h3>Link Types</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Visual</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Explicit</td>
+<td>Gray line, straight</td>
+</tr>
+<tr>
+<td>Collision (synthesis)</td>
+<td>Green curved line, 2px</td>
+</tr>
+<tr>
+<td>Agent (autonomous)</td>
+<td>Purple curved line, 1.5px</td>
+</tr>
+<tr>
+<td>Semantic similarity</td>
+<td>Blue dotted line, very faint</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Progression</h2>
+<p>There is no win state. But there are emergent milestones:</p>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First Synthesis</td>
+<td>Create first connection</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>10 objects with at least one link each</td>
+</tr>
+<tr>
+<td>Constellation</td>
+<td>5 objects in mutual affinity cluster</td>
+</tr>
+<tr>
+<td>Ancient</td>
+<td>First object reaches Ancient trait</td>
+</tr>
+<tr>
+<td>Volatile Cascade</td>
+<td>Chain reaction of 3+ volatile objects</td>
+</tr>
+<tr>
+<td>Resurrection</td>
+<td>Forgotten object resurfaces via collision</td>
+</tr>
+<tr>
+<td>Void Discovery</td>
+<td>Notice a gap in your semantic map</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Failure States</h2>
+<p>The system fails when:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Cause</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Stagnation</strong></td>
+<td>No drift, no collisions</td>
+<td>No new connections form</td>
+</tr>
+<tr>
+<td><strong>Overload</strong></td>
+<td>Too many objects, too much noise</td>
+<td>Can&#39;t focus, collisions meaningless</td>
+</tr>
+<tr>
+<td><strong>Isolation</strong></td>
+<td>All objects far apart, no gravity</td>
+<td>No emergent clusters</td>
+</tr>
+<tr>
+<td><strong>Determinism</strong></td>
+<td>User controls everything</td>
+<td>No surprises, no discovery</td>
+</tr>
+</tbody></table>
+<p>The last one is the worst. If the user can predict exactly what will happen, the system has failed its purpose.</p>
+<hr>
+<h2>Design Principles</h2>
+<ol>
+<li><strong>Randomness is the engine</strong> — Without drift, nothing happens</li>
+<li><strong>Collisions are the game</strong> — The prompt is the core mechanic</li>
+<li><strong>Memory creates meaning</strong> — Objects that remember feel alive</li>
+<li><strong>Traits amplify unpredictability</strong> — Behaviors create emergent complexity</li>
+<li><strong>The void is luminous</strong> — Gaps are features, not bugs</li>
+<li><strong>Control is the enemy</strong> — The less you command, the more you discover</li>
+</ol>
+<hr>
+<h2>Future Play Modes</h2>
+<h3>Observation Mode</h3>
+<p>No interaction. Just watch the system evolve. Objects drift, collide with each other autonomously, synthesize based on embedding similarity. A screensaver for your knowledge.</p>
+<h3>Archeology Mode</h3>
+<p>Start with a forgotten object. See what it collides with. Rediscover old ideas.</p>
+<h3>Accelerator Tournament</h3>
+<p>Pick an anchor. Get 5 random strangers. You have 60 seconds to find connections. How many syntheses can you create?</p>
+<h3>Void Mapping</h3>
+<p>Visualize embedding space. See the clusters. See the gaps. What&#39;s missing?</p>
+
+  </main>
+  
+  <footer>
+    <p>Determinism is the enemy of discovery.</p>
+  </footer>
+</body>
+</html>

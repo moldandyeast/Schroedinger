@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essay — Schroedinger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e0e0e0;
+      --fg-muted: #888;
+      --accent: #c9a227;
+      --border: #2a2a2a;
+      --code-bg: #141414;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-size: 18px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Crimson Pro', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover, nav a.active {
+      color: var(--fg);
+    }
+    
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg);
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    em {
+      font-style: italic;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      nav { padding: 0.75rem 1rem; gap: 1rem; }
+      nav .links { gap: 1rem; }
+      main { padding: 5rem 1rem 2rem; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SCHROEDINGER</a>
+    <div class="links">
+      <a href="/index.html">Readme</a>
+      <a href="/about.html">About</a>
+      <a href="/essay.html" class="active">Essay</a>
+      <a href="/play.html">Play</a>
+      <a href="/log.html">Log</a>
+    </div>
+  </nav>
+  
+  <main>
+    <h1>THE PHILOSOPHY OF SCHROEDINGER</h1>
+<p><em>An essay on why knowledge tools should embrace randomness, incompleteness, and the physics of thought.</em></p>
+<hr>
+<h2>I. The Problem with Tools for Thought</h2>
+<p>Every knowledge tool promises the same thing: finally, you&#39;ll be organized. Finally, you&#39;ll find what you&#39;re looking for. Finally, your thoughts will make sense.</p>
+<p>These tools optimize for <strong>retrieval</strong>—finding the thing you already know you want. Search boxes. Folder hierarchies. Tags. Links. All of them assume you know what you&#39;re looking for before you look.</p>
+<p>But the most valuable insights aren&#39;t retrieved. They&#39;re <strong>encountered</strong>. You stumble across a note you forgot you wrote. You see two ideas next to each other that have never been adjacent before. You realize something you didn&#39;t know you knew.</p>
+<p>Determinism is the enemy of discovery.</p>
+<hr>
+<h2>II. The Case for Randomness</h2>
+<p>Most software eliminates randomness. It&#39;s seen as a bug—unpredictable behavior, chaotic state, things moving when they shouldn&#39;t.</p>
+<p>We want the opposite.</p>
+<p>Every feature in Schroedinger exists to introduce controlled randomness—to create conditions for <strong>emergence</strong>. Not chaos for its own sake, but engineered serendipity.</p>
+<p>When you search for something, you find what you expected. When you navigate by folder, you see what you organized. When you follow a link, you go where you intended. Every action has a predictable result.</p>
+<p>But insight doesn&#39;t come from obedience. Insight comes from accident. From stumbling across something you forgot. From juxtapositions you didn&#39;t plan.</p>
+<blockquote>
+<p><em>&quot;Chance favors the prepared mind.&quot;</em> — Louis Pasteur</p>
+</blockquote>
+<p>The prepared mind has a canvas full of thoughts. Schroedinger provides the chance.</p>
+<hr>
+<h2>III. Withered Technology</h2>
+<p>Gunpei Yokoi was an engineer at Nintendo. While competitors chased cutting-edge graphics, Yokoi advocated for a different approach:</p>
+<blockquote>
+<p>Take mature, well-understood, cheap technology and use it in radical new ways.</p>
+</blockquote>
+<p>This philosophy produced the Game Boy. Competitors built color handhelds with expensive screens and short battery life. Yokoi used a simple monochrome LCD from the calculator industry.</p>
+<p>The technology was &quot;withered&quot;—boring, proven, unglamorous. But the application was revolutionary.</p>
+<p>Schroedinger applies this principle:</p>
+<table>
+<thead>
+<tr>
+<th>Withered Tech</th>
+<th>Radical Application</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Markdown</td>
+<td>Thoughts with YAML frontmatter, physics properties</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td>Single-file database with embeddings, full-text search</td>
+</tr>
+<tr>
+<td>matter.js</td>
+<td>Physics simulation for thought interaction</td>
+</tr>
+<tr>
+<td>ONNX</td>
+<td>Local embedding model, no cloud API</td>
+</tr>
+</tbody></table>
+<p>These technologies will exist in fifty years. Your notes will still be readable. The database can be rebuilt from plain text. Nothing depends on a company staying in business.</p>
+<hr>
+<h2>IV. The Cerny Method</h2>
+<p>Mark Cerny, architect of the PlayStation, has a methodology for game development:</p>
+<blockquote>
+<p>Find the &quot;fun&quot; at the smallest possible scale before building anything else.</p>
+</blockquote>
+<p>Most development goes wrong in the middle. You build infrastructure for months before you know if the core experience works. You&#39;re betting everything on an untested premise.</p>
+<p>Cerny inverts this. He starts with a &quot;first playable&quot;—the simplest possible prototype that contains the core mechanic. Is it fun? Does it <em>feel</em> right? If not, fix it now. If so, build outward.</p>
+<p>For Schroedinger, the core mechanic is the <strong>collision</strong>.</p>
+<p>Two thoughts drift together. They touch. A prompt appears: <em>What connects these?</em></p>
+<p>If that moment doesn&#39;t feel good—if naming the connection isn&#39;t satisfying, if the synthesis doesn&#39;t feel earned—no amount of features will save the product.</p>
+<p>We built the collision first. Everything else followed.</p>
+<hr>
+<h2>V. Gödel&#39;s Incompleteness</h2>
+<p>In 1931, Kurt Gödel proved something devastating about formal systems: any system powerful enough to describe basic arithmetic contains statements that are true but unprovable within the system.</p>
+<p>Completeness and consistency are mutually exclusive. You can have one or the other, never both.</p>
+<p>Most knowledge software ignores this. Databases demand consistency. Tagging systems demand completeness. Every thought must be categorized, linked, placed in a hierarchy.</p>
+<p>But knowledge isn&#39;t a formal system that can be made complete. There are always thoughts you haven&#39;t had yet. Always gaps in the map.</p>
+<p>Schroedinger embraces incompleteness:</p>
+<ul>
+<li><strong>Orphan objects</strong> are highlighted, not hidden—they&#39;re research questions waiting to happen</li>
+<li><strong>Forgotten objects</strong> drift to the edges, fading but not deleted—they may resurface when you least expect</li>
+<li><strong>Void visualization</strong> shows clusters of similarity with empty space between—where is the knowledge you don&#39;t have?</li>
+</ul>
+<p>The gaps are not failures. They are invitations.</p>
+<hr>
+<h2>VI. The Quantum Metaphor</h2>
+<p>The name &quot;Schroedinger&quot; is not decorative. The quantum metaphor runs deep.</p>
+<p><strong>Superposition</strong>: Before you observe a thought, it exists in potential. It might connect to anything. It drifts through possibility space. Only when you focus on it does it &quot;collapse&quot; into a specific meaning.</p>
+<p><strong>Entropy</strong>: New thoughts have high entropy—they&#39;re unstable, energetic, moving fast. As you observe them, entropy decreases. They settle. They become stable, massive, gravitational centers for other thoughts.</p>
+<p><strong>Wave function</strong>: Each thought has a &quot;spread&quot; of potential meanings, represented by its embedding vector. Similar thoughts have overlapping wave functions—they&#39;re more likely to collide, to interfere, to synthesize.</p>
+<p><strong>Observation changes state</strong>: The act of looking at a thought changes it. Your attention increases its mass, decreases its entropy, strengthens its embeddings. Thoughts you ignore drift away. Thoughts you focus on become anchors.</p>
+<p>This isn&#39;t mysticism. It&#39;s a design language that produces specific, useful behaviors. Objects that feel alive. A canvas that surprises you.</p>
+<hr>
+<h2>VII. The Living System</h2>
+<p>Knowledge Objects in Schroedinger are not passive data. They develop:</p>
+<p><strong>Memory</strong>: How often have they been observed? How long did you spend with them? Who did they collide with? What came of those collisions?</p>
+<p><strong>Relationships</strong>: Objects that synthesize develop affinity—they drift toward each other. Objects that are dismissed develop rivalry—they push apart.</p>
+<p><strong>Behavioral traits</strong>: Based on history, objects become restless (seeking collisions), stable (resisting movement), magnetic (attracting others), volatile (causing chain reactions), or forgotten (fading away).</p>
+<p>This is inspired by a breakthrough in game design: giving NPCs persistent memory and the ability to evolve based on player interaction. The game world develops a history that&#39;s unique to your playthrough.</p>
+<p>We apply the same principle to knowledge. Your vault develops a personality. Objects have grudges and friendships. The system has moods.</p>
+<p>You cultivate an ecosystem. You don&#39;t command a database.</p>
+<hr>
+<h2>VIII. How to Work Better</h2>
+<p>In 1991, the Swiss artists Peter Fischli and David Weiss installed a simple text piece on the wall of a factory in Zurich:</p>
+<pre><code>1. Do one thing at a time
+2. Know the problem
+3. Learn to listen
+4. Learn to ask questions
+5. Distinguish sense from nonsense
+6. Accept change
+7. Admit mistakes
+8. Say it simple
+9. Be calm
+10. Smile
+</code></pre>
+<p>These instructions are deceptively profound. They&#39;re not about productivity—they&#39;re about presence. About engaging with work as a practice rather than a race.</p>
+<p>Schroedinger adopts this sensibility:</p>
+<ul>
+<li><strong>One thing at a time</strong>: The canvas shows everything, but you can only collide two objects at once</li>
+<li><strong>Accept change</strong>: The system is never static; positions drift, relationships evolve</li>
+<li><strong>Be calm</strong>: No notifications, no badges, no &quot;you&#39;ve fallen behind&quot; warnings</li>
+<li><strong>Smile</strong>: The collisions are playful; the synthesis is creative; the void is luminous</li>
+</ul>
+<hr>
+<h2>IX. Conclusion</h2>
+<p>Schroedinger is a bet on a different kind of tool—one that doesn&#39;t try to organize your thoughts but to surprise you with them.</p>
+<p>It&#39;s built on boring technology, used in unusual ways. It embraces incompleteness instead of demanding consistency. It introduces randomness instead of eliminating it. It gives objects agency instead of treating them as passive data.</p>
+<p>The goal is not to help you find what you&#39;re looking for.</p>
+<p>The goal is to help you find what you weren&#39;t.</p>
+<hr>
+<p><em>Determinism is the enemy of discovery.</em></p>
+
+  </main>
+  
+  <footer>
+    <p>Determinism is the enemy of discovery.</p>
+  </footer>
+</body>
+</html>

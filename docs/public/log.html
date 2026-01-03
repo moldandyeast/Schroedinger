@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Log — Schroedinger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e0e0e0;
+      --fg-muted: #888;
+      --accent: #c9a227;
+      --border: #2a2a2a;
+      --code-bg: #141414;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      font-size: 18px;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Crimson Pro', Georgia, serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    
+    nav .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    nav a:hover, nav a.active {
+      color: var(--fg);
+    }
+    
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg);
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    em {
+      font-style: italic;
+    }
+    
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--fg-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      nav { padding: 0.75rem 1rem; gap: 1rem; }
+      nav .links { gap: 1rem; }
+      main { padding: 5rem 1rem 2rem; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SCHROEDINGER</a>
+    <div class="links">
+      <a href="/index.html">Readme</a>
+      <a href="/about.html">About</a>
+      <a href="/essay.html">Essay</a>
+      <a href="/play.html">Play</a>
+      <a href="/log.html" class="active">Log</a>
+    </div>
+  </nav>
+  
+  <main>
+    <h1>BUILD LOG</h1>
+<p><em>A chronicle of Schroedinger&#39;s construction</em></p>
+<hr>
+<h2>Session 1: Genesis</h2>
+<p><strong>Date</strong>: January 3, 2026</p>
+<h3>Phase 0: Foundation</h3>
+<p>Created project structure:</p>
+<pre><code>schroedinger/
+├── bridge/           # Backend server
+├── lens/             # Frontend UI
+├── vault/            # User&#39;s markdown files
+├── state/            # SQLite database
+└── models/           # ONNX embedding model
+</code></pre>
+<p>Established technology stack:</p>
+<ul>
+<li><strong>Bridge</strong>: Node.js + Hono + better-sqlite3 + chokidar + onnxruntime-node</li>
+<li><strong>Lens</strong>: Svelte 5 + Vite + PixiJS 8 + matter.js</li>
+</ul>
+<h3>Phase 1: The Bridge</h3>
+<p>Built the backend server:</p>
+<ol>
+<li><p><strong>Database Layer</strong> (<code>db.ts</code>)</p>
+<ul>
+<li>SQLite schema for KOs, links, memory, physics</li>
+<li>CRUD operations for all entities</li>
+<li>Embedding storage in memory (embeddings are regenerated on startup)</li>
+<li>Similarity computation via cosine distance</li>
+<li>Trait computation based on memory state</li>
+</ul>
+</li>
+<li><p><strong>File Watcher</strong> (<code>watcher.ts</code>)</p>
+<ul>
+<li>chokidar watching vault/*.md</li>
+<li>Parse YAML frontmatter + markdown content</li>
+<li>Sync to database on add/change/delete</li>
+<li>Generate embeddings on file changes</li>
+</ul>
+</li>
+<li><p><strong>REST API</strong> (<code>server.ts</code>)</p>
+<ul>
+<li>Full CRUD for KOs, links, physics, memory</li>
+<li>Discovery endpoints (search, similar, random, forgotten, orphans)</li>
+<li>Collision and synthesis recording</li>
+<li>Accelerator endpoint for focused collisions</li>
+</ul>
+</li>
+<li><p><strong>WebSocket</strong> (<code>index.ts</code>)</p>
+<ul>
+<li>Real-time broadcast of file changes</li>
+<li>Connection management</li>
+</ul>
+</li>
+<li><p><strong>Embeddings</strong> (<code>embeddings.ts</code>)</p>
+<ul>
+<li>ONNX Runtime with all-MiniLM-L6-v2</li>
+<li>Simple WordPiece tokenizer</li>
+<li>Mean pooling + L2 normalization</li>
+<li>384-dimensional vectors</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 2: The Lens</h3>
+<p>Built the frontend:</p>
+<ol>
+<li><p><strong>Canvas</strong> (<code>Canvas.svelte</code>)</p>
+<ul>
+<li>PixiJS Application with pan/zoom</li>
+<li>Physics simulation loop with matter.js</li>
+<li>Link visualization (curved edges)</li>
+<li>Semantic similarity lines</li>
+<li>Sprite management</li>
+</ul>
+</li>
+<li><p><strong>KO Sprites</strong> (<code>KOSprite.ts</code>)</p>
+<ul>
+<li>Visual representation of knowledge objects</li>
+<li>Drag and drop with spring physics</li>
+<li>Trait-based visuals (shimmer, sparks, glow)</li>
+<li>Hover observation tracking</li>
+</ul>
+</li>
+<li><p><strong>Physics Engine</strong> (<code>physics.ts</code>)</p>
+<ul>
+<li>matter.js wrapper</li>
+<li>Drift simulation with entropy</li>
+<li>Semantic gravity based on embeddings</li>
+<li>Affinity attraction / rivalry repulsion</li>
+<li>Autonomous behaviors (magnetic seeking, volatile impulses)</li>
+</ul>
+</li>
+<li><p><strong>UI Components</strong></p>
+<ul>
+<li><code>CollisionPrompt.svelte</code> — Snap/Dismiss/Ignore dialog</li>
+<li><code>SearchPanel.svelte</code> — Live search with debounce</li>
+<li><code>CreatePanel.svelte</code> — New thought modal</li>
+<li><code>EditPanel.svelte</code> — Sidebar with content, memory, traits</li>
+<li><code>Accelerator.svelte</code> — Focus mode with relatives + strangers</li>
+</ul>
+</li>
+<li><p><strong>State Management</strong> (<code>stores.ts</code>)</p>
+<ul>
+<li>Svelte stores for KOs, physics, memory, links</li>
+<li>Similarity store for physics calculations</li>
+<li>UI state (selected, hovered, active collision)</li>
+</ul>
+</li>
+</ol>
+<h3>Vault Contents</h3>
+<p>Created initial Knowledge Objects:</p>
+<ol>
+<li><code>welcome.md</code> — Introduction to Schroedinger</li>
+<li><code>mark-cerny-method.md</code> — Find the fun first</li>
+<li><code>gunpei-yokoi.md</code> — Lateral thinking with withered technology</li>
+<li><code>godels-incompleteness.md</code> — Embrace the gaps</li>
+<li><code>randomness-and-emergence.md</code> — Determinism is the enemy</li>
+<li><code>fischli-weiss.md</code> — How to work better</li>
+</ol>
+<hr>
+<h2>Implementation Details</h2>
+<h3>What Works</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File → Database sync</td>
+<td>✅</td>
+<td>Via chokidar, handles add/change/delete</td>
+</tr>
+<tr>
+<td>Markdown parsing</td>
+<td>✅</td>
+<td>YAML frontmatter + content extraction</td>
+</tr>
+<tr>
+<td>Embedding generation</td>
+<td>✅</td>
+<td>ONNX + all-MiniLM-L6-v2</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>✅</td>
+<td>All endpoints implemented</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>✅</td>
+<td>Real-time file change notifications</td>
+</tr>
+<tr>
+<td>PixiJS canvas</td>
+<td>✅</td>
+<td>Smooth rendering, pan/zoom</td>
+</tr>
+<tr>
+<td>matter.js physics</td>
+<td>✅</td>
+<td>Both server (drift) and client (interaction)</td>
+</tr>
+<tr>
+<td>Collision detection</td>
+<td>✅</td>
+<td>With cooldown to prevent spam</td>
+</tr>
+<tr>
+<td>Synthesis creation</td>
+<td>✅</td>
+<td>Creates markdown file + links</td>
+</tr>
+<tr>
+<td>Memory tracking</td>
+<td>✅</td>
+<td>Observations, collisions, affinities</td>
+</tr>
+<tr>
+<td>Trait computation</td>
+<td>✅</td>
+<td>Based on memory state</td>
+</tr>
+<tr>
+<td>Autonomous behaviors</td>
+<td>✅</td>
+<td>Magnetic seeking, volatile impulses</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>✅</td>
+<td>LIKE-based, could use FTS5</td>
+</tr>
+<tr>
+<td>Similarity</td>
+<td>✅</td>
+<td>In-memory cosine similarity</td>
+</tr>
+</tbody></table>
+<h3>What&#39;s Stubbed</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FTS5 search</td>
+<td>🟡</td>
+<td>Schema ready, using LIKE for now</td>
+</tr>
+<tr>
+<td>sqlite-vec</td>
+<td>🟡</td>
+<td>Using in-memory embeddings instead</td>
+</tr>
+<tr>
+<td>Void visualization</td>
+<td>❌</td>
+<td>Not implemented</td>
+</tr>
+<tr>
+<td>Observation mode</td>
+<td>❌</td>
+<td>Auto-play not implemented</td>
+</tr>
+</tbody></table>
+<h3>Dependencies</h3>
+<pre><code class="language-json">// Bridge
+{
+  &quot;hono&quot;: &quot;^4.6.0&quot;,
+  &quot;@hono/node-server&quot;: &quot;^1.13.0&quot;,
+  &quot;@hono/node-ws&quot;: &quot;^1.0.0&quot;,
+  &quot;chokidar&quot;: &quot;^4.0.0&quot;,
+  &quot;better-sqlite3&quot;: &quot;^11.0.0&quot;,
+  &quot;onnxruntime-node&quot;: &quot;^1.19.0&quot;,
+  &quot;ulid&quot;: &quot;^2.3.0&quot;,
+  &quot;yaml&quot;: &quot;^2.6.0&quot;,
+  &quot;glob&quot;: &quot;^11.0.0&quot;
+}
+
+// Lens
+{
+  &quot;pixi.js&quot;: &quot;^8.5.0&quot;,
+  &quot;matter-js&quot;: &quot;^0.20.0&quot;,
+  &quot;svelte&quot;: &quot;^5.0.0&quot;,
+  &quot;vite&quot;: &quot;^5.4.0&quot;
+}
+</code></pre>
+<h3>Model Files</h3>
+<p>Downloaded from Hugging Face:</p>
+<ul>
+<li><code>models/all-MiniLM-L6-v2.onnx</code> — 86MB</li>
+<li><code>models/tokenizer.json</code> — 455KB</li>
+</ul>
+<hr>
+<h2>Design Decisions</h2>
+<h3>Why In-Memory Embeddings?</h3>
+<p>sqlite-vec requires compilation and adds complexity. For a prototype with &lt;10k objects, in-memory cosine similarity is fast enough and simpler to implement. The embeddings are regenerated on startup from the ONNX model.</p>
+<h3>Why Node.js Instead of Bun?</h3>
+<p>Bun wasn&#39;t installed on the development machine. The code is designed to work on both, but was tested on Node.js 22 with tsx for TypeScript execution.</p>
+<h3>Why matter.js on Both Sides?</h3>
+<p>Server-side matter.js handles drift simulation (objects move when you&#39;re not looking). Client-side matter.js handles interaction physics (drag, collision detection). Same engine ensures consistent behavior.</p>
+<h3>Why Curved Lines for Links?</h3>
+<p>Curved lines (quadratic bezier) look more organic than straight lines. The curvature is subtle (10% offset from midpoint) but makes the canvas feel more alive.</p>
+<hr>
+<h2>Lessons Learned</h2>
+<ol>
+<li><strong>chokidar&#39;s glob patterns are unreliable</strong> — Watching the directory directly with manual filtering works better</li>
+<li><strong>PixiJS 8 has a new API</strong> — Graphics methods changed from v7</li>
+<li><strong>Svelte 5 uses <code>mount</code> not <code>new App</code></strong> — Component instantiation changed</li>
+<li><strong>ONNX tokenization is tricky</strong> — Had to implement basic WordPiece tokenizer</li>
+</ol>
+<hr>
+<h2>Next Steps</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Add FTS5 for proper full-text search</li>
+<li><input disabled="" type="checkbox"> Implement void visualization</li>
+<li><input disabled="" type="checkbox"> Add observation mode (auto-play)</li>
+<li><input disabled="" type="checkbox"> Improve trait visuals</li>
+<li><input disabled="" type="checkbox"> Add keyboard shortcuts for power users</li>
+<li><input disabled="" type="checkbox"> Consider mobile/touch support</li>
+<li><input disabled="" type="checkbox"> Add export/import for vault migration</li>
+</ul>
+
+  </main>
+  
+  <footer>
+    <p>Determinism is the enemy of discovery.</p>
+  </footer>
+</body>
+</html>
