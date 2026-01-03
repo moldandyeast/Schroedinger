@@ -2,6 +2,8 @@
 
 **A local-first knowledge instrument where thoughts exist in superposition until observed.**
 
+[![GitHub](https://img.shields.io/badge/GitHub-moldandyeast%2FSchroedinger-181717?logo=github)](https://github.com/moldandyeast/Schroedinger)
+
 ---
 
 ## The Idea
