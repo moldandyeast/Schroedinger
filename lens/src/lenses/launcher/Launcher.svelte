@@ -99,26 +99,40 @@
     
     <div class="apps">
       {#each LENSES as app}
-        <button 
+        <div 
           class="app-card" 
           class:ready={app.ready}
           class:hovered={hoveredApp === app.id}
           style="--app-color: {getAppColor(app)}"
-          on:click={() => handleLaunch(app.id, app.ready)}
           on:mouseenter={() => hoveredApp = app.id}
           on:mouseleave={() => hoveredApp = null}
-          disabled={!app.ready}
+          role="group"
         >
-          <div class="app-icon">{app.icon}</div>
-          <div class="app-content">
-            <h2 class="app-name">{app.name}</h2>
-            <p class="app-description">{app.description}</p>
-          </div>
+          <button 
+            class="app-main"
+            on:click={() => handleLaunch(app.id, app.ready)}
+            disabled={!app.ready}
+          >
+            <div class="app-icon">{app.icon}</div>
+            <div class="app-content">
+              <h2 class="app-name">{app.name}</h2>
+              <p class="app-description">{app.description}</p>
+            </div>
+          </button>
+          <a href={app.docUrl} target="_blank" class="app-docs" title="View documentation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </a>
           {#if !app.ready}
             <span class="coming-soon">soon</span>
           {/if}
           <div class="app-glow"></div>
-        </button>
+        </div>
       {/each}
     </div>
   </main>
@@ -317,19 +331,15 @@
   .app-card {
     position: relative;
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 20px;
+    align-items: stretch;
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-radius: 12px;
-    cursor: pointer;
-    text-align: left;
     transition: all 0.3s ease;
     overflow: hidden;
   }
   
-  .app-card:disabled { cursor: not-allowed; opacity: 0.5; }
+  .app-card:not(.ready) { opacity: 0.5; }
   
   .app-card.ready:hover {
     border-color: var(--app-color);
@@ -343,6 +353,36 @@
   }
   
   .app-card.ready:hover .app-glow { opacity: 1; }
+  
+  .app-main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .app-main:disabled { cursor: not-allowed; }
+  
+  .app-docs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    color: var(--text-faint);
+    border-left: 1px solid var(--border);
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  
+  .app-docs:hover {
+    color: var(--accent);
+    background: var(--bg);
+  }
   
   .app-glow {
     position: absolute;

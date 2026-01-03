@@ -18,6 +18,7 @@ export const LENSES: LensConfig[] = [
     color: '#44ff88',
     colorLight: '#1a8a4a',
     ready: true,
+    docUrl: '/docs/lenses/drift.html',
   },
   {
     id: 'observe',
@@ -27,6 +28,7 @@ export const LENSES: LensConfig[] = [
     color: '#4488ff',
     colorLight: '#2255cc',
     ready: false,
+    docUrl: '/docs/lenses/observe.html',
   },
   {
     id: 'accelerator',
@@ -36,6 +38,7 @@ export const LENSES: LensConfig[] = [
     color: '#8844ff',
     colorLight: '#6622cc',
     ready: false,
+    docUrl: '/docs/lenses/accelerator.html',
   },
   {
     id: 'void',
@@ -45,6 +48,7 @@ export const LENSES: LensConfig[] = [
     color: '#ff8844',
     colorLight: '#cc5500',
     ready: false,
+    docUrl: '/docs/lenses/void.html',
   },
   {
     id: 'archive',
@@ -54,6 +58,7 @@ export const LENSES: LensConfig[] = [
     color: '#888888',
     colorLight: '#555555',
     ready: false,
+    docUrl: '/docs/lenses/archive.html',
   },
 ];
 

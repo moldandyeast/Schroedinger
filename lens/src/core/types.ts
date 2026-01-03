@@ -97,5 +97,6 @@ export interface LensConfig {
   color: string;
   colorLight: string;
   ready: boolean;
+  docUrl?: string;
 }
 
